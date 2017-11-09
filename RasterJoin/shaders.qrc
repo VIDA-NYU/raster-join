@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>shaders/polygon.vert</file>
+        <file>shaders/polygon.frag</file>
+        <file>shaders/points.vert</file>
+        <file>shaders/points.frag</file>
+        <file>shaders/line-simple.vert</file>
+        <file>shaders/line-simple.frag</file>
+        <file>shaders/polygon-inside.frag</file>
+        <file>shaders/index.glsl</file>
+        <file>shaders/hybrid.glsl</file>
+        <file>shaders/index-size.glsl</file>
+        <file>shaders/create-index.glsl</file>
+    </qresource>
+</RCC>
