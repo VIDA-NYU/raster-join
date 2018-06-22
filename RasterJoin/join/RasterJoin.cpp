@@ -69,6 +69,9 @@ void RasterJoin::updateBuffers() {
 
     GLFunction::size = QSize(resx, resy);
     if (this->polyFbo.isNull() || this->polyFbo->size()!= GLFunction::size) {
+        this->polyFbo.clear();
+        this->pointsFbo.clear();
+
         this->polyFbo.reset(new FBOObject(GLFunction::size,FBOObject::NoAttachment,GL_TEXTURE_2D,GL_RGBA32F));
         this->pointsFbo.reset(new FBOObject(GLFunction::size,FBOObject::NoAttachment,GL_TEXTURE_2D,GL_RGBA32F));
     }

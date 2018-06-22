@@ -65,7 +65,10 @@ void HybridJoin::updateBuffers() {
     int fboSize = 8192;
     size = getResolution(bound.leftBottom,bound.rightTop,fboSize);
     if (this->polyFbo.isNull() || this->polyFbo->size()!= size) {
+        this->polyFbo.clear();
         this->polyFbo.reset(new FBOObject(size,FBOObject::NoAttachment,GL_TEXTURE_2D,GL_RGBA32F));
+
+        this->outlineFbo.clear();
         this->outlineFbo.reset(new FBOObject(size,FBOObject::NoAttachment,GL_TEXTURE_2D,GL_RGBA32F));
         this->pointsFbo.setData(size.width() * size.height() * sizeof(int) * 2, GL_RG32I, NULL);
     }
