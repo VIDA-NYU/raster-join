@@ -61,3 +61,9 @@ The source code for the three GPU techniques.
 --avg: Computation of avg() aggregation function over the specified attribute. Optional argument. Count() is the default computation. 
 
 **Example:** ./RasterJoin --nIter 10 --joinType raster --backendIndexName ./taxi-backend --polygonList ../data/nyc_polys.txt --polygonDataset neigh --locAttrib 1 --indexRes 1024 --nAttrib 2 --startTime 1230768000 --endTime 1272808000 --inmem 
+
+## Data used in the Paper:
+
+The data to be used for reproducing the results involving the NYC Taxi data and the neighborhood polygons can be found at: https://drive.google.com/open?id=1ht2cU21UL2vf1LnwZgdemWGitEBKvzXZ
+
+The **readme.txt** file in the above shared folder has instructions on using the provided files.
