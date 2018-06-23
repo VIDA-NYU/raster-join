@@ -207,6 +207,8 @@ void main() {
         }
     }
 
+    float pixg = 0;
+    float decimal = 0;
     int val = 0;
     if(aggrType != 0) {
         uint off = attrOffsets[aggrId];
@@ -217,7 +219,11 @@ void main() {
         float attVal = attValVec.y;
         if(useX) attVal = attValVec.x;
 
-        val = int(floatVal(aggrId, attVal) * 100);
+        pixg = floatVal(aggrId, attVal);
+        val = int(pixg);
+        val /= 100;
+        decimal = pixg - 100.f * val;
+        decimal *= 10;
     }
 
     vec2 fcellid = (pt - leftBottom);
@@ -234,6 +240,7 @@ void main() {
                 atomicAdd(bufferAgg[polyId],1);
                 if(aggrType != 0) {
                     atomicAdd(bufferAgg[polyId + offset],val);
+                    atomicAdd(bufferAgg[polyId + 2 * offset],int(decimal));
                 }
             }
             pin = node.y;

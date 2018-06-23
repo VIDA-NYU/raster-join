@@ -169,17 +169,34 @@ void runExperiment() {
 }
 
 void printResults(QVector<int> agg, int top, uint32_t endTime = 0, int res = 0) {
+    int polySize = agg.size() / 3;
+    std::cout << polySize << "\n";
     if(endTime > 0) {
         QString fileName = "../results/vldb2018/laptop/accuracy/raster_" + QString::number(endTime) + "_" + QString::number(res) + ".csv";
         QFile f(fileName);
         if (!f.open(QFile::WriteOnly | QFile::Text)) return;
         QTextStream op(&f);
         for(int i = 0;i < top; i ++) {
-            op << i << "\t" << agg[i] << "\n";
+            if(aggrAttrib == -1) { // count
+                op << i << "\t" << agg[i] << "\n";
+            } else { // avg
+                float num = float(agg[polySize + i]) * 100.f + agg[2 * polySize + i] / 10.f;
+                float den = agg[i];
+                float avg = (agg[i] == 0)? 0: num / den;
+                op << qSetRealNumberPrecision(10) << i << "\t" << avg << "\n";
+            }
         }
     } else {
         for(int i = 0;i < top; i ++) {
-            std::cout << i << "\t" << agg[i] << "\t" << agg[i + agg.size()/2] << std::endl;
+            if(aggrAttrib == -1) { // count
+                std::cout << i << "\t" << agg[i] << "\t" << std::endl;
+            } else { // avg
+                float num = float(agg[polySize + i]) * 100.f + agg[2 * polySize + i] / 10.f;
+                float den = agg[i];
+                float avg = (agg[i] == 0)? 0: num / den;
+                std::cout << i << "\t" << avg << "\n";
+//                std::cout << i << "\t" << agg[i] << " " << agg[polySize + i] << " " << agg[polySize * 2 + i] << "\n";
+            }
         }
     }
 }

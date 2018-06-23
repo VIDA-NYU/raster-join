@@ -31,13 +31,15 @@ void main()
     int pos = width * int(gl_FragCoord.y) + int(gl_FragCoord.x);
     if(!isBorder()) {
         // inside
-        ivec2 pix = texelFetch(pointsTex, pos).rg;
+        ivec3 pix = texelFetch(pointsTex, pos).rgb;
         int ct = pix.r;
         if(ct != 0) {
             imageAtomicAdd(bufferAgg, int(col), ct);
             if(aggrType != 0) {
                 int val = pix.g;
+                int decimal = pix.b;
                 imageAtomicAdd(bufferAgg, int(col) + offset, val);
+                imageAtomicAdd(bufferAgg, int(col) + 2 * offset, decimal);
             }
         }
         fragColor = vec4(0,0,1,1);

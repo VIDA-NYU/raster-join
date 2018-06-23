@@ -41,7 +41,7 @@ void HybridJoin::initGL() {
     polyBuffer = new GLBuffer();
     polyBuffer->generate(GL_ARRAY_BUFFER);
 
-    pointsFbo.create(0,GL_RG32I,0);
+    pointsFbo.create(0,GL_RGBA32I,0);
 
     pointsShader.reset(new QOpenGLShaderProgram());
     pointsShader->addShaderFromSourceFile(QOpenGLShader::Compute, ":shaders/hybrid.glsl");
@@ -70,7 +70,7 @@ void HybridJoin::updateBuffers() {
 
         this->outlineFbo.clear();
         this->outlineFbo.reset(new FBOObject(size,FBOObject::NoAttachment,GL_TEXTURE_2D,GL_RGBA32F));
-        this->pointsFbo.setData(size.width() * size.height() * sizeof(int) * 2, GL_RG32I, NULL);
+        this->pointsFbo.setData(size.width() * size.height() * sizeof(int) * 4, GL_RGBA32I, NULL);
     }
 }
 
@@ -333,7 +333,7 @@ void HybridJoin::renderPolys() {
 }
 
 void HybridJoin::clearFbo() {
-    glClearNamedBufferData(this->pointsFbo.bufId,GL_RG32I,GL_RG,GL_INT,NULL);
+    glClearNamedBufferData(this->pointsFbo.bufId,GL_RGBA32I,GL_RGBA,GL_INT,NULL);
 }
 
 void HybridJoin::performJoin() {

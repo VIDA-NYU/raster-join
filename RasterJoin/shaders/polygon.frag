@@ -16,8 +16,12 @@ void main()
     if(ct != 0) {
         imageAtomicAdd(bufferAgg, int(col), ct);
         if(aggrType != 0) {
-            int val = int(pix.g * 100);
+            int val = int(pix.g);
+            val /= 100;
+            float decimal = pix.g - 100.f * val;
+            decimal *= 10;
             imageAtomicAdd(bufferAgg, int(col) + offset, val);
+            imageAtomicAdd(bufferAgg, int(col) + 2 * offset, int(decimal));
         }
     }
     fragColor = vec4(0,0,1,1);

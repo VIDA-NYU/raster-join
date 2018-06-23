@@ -17,6 +17,12 @@ void GLBuffer::resize(GLenum usage, GLsizeiptr dataSize)
         glBindBuffer(this->target, this->id);
         glBufferData(this->target, dataSize, 0, usage);
         this->size = dataSize;
+        GLenum err = glGetError();
+        if(err != 0) {
+            std::cout << "Memory error: " << err << " " << dataSize << "\n";
+            exit(0);
+        }
+
     }
 }
 

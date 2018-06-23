@@ -44,7 +44,7 @@ GLHandler::GLHandler(bool inMemory) : dataHandler(NULL), inmem(inMemory) {
     // for now using 3Gb with a 100mb buffer for other small data / OS
     // 10LL was used for ooc experiments to get consistent results
     // 4LL for hybrid join due to some emmory leak when using 8192 fbo res
-    this->maxBufferSize = 12LL * 256LL * 1024LL * 1024LL;
+    this->maxBufferSize = 8LL * 256LL * 1024LL * 1024LL;
 	#ifdef FULL_SUMMARY_GL
     	qDebug() << "Max GPU buffer size" << this->maxBufferSize << sizeof(GLsizeiptr);
 	#endif

@@ -39,7 +39,7 @@ QVector<int> GLFunction::execute() {
     timer.start();
 #endif
     polySize = this->handler->dataHandler->getPolyHandler()->getNoPolys();
-    result = QVector<int>(polySize * 2,0);
+    result = QVector<int>(polySize * 3,0);
     this->setupForRender();
 #ifdef PROFILE_GL
     qint64 elapsed = timer.elapsed();
@@ -176,7 +176,7 @@ void GLFunction::setupPolygons() {
     uint32_t nopolys = poly->getNoPolys();
     GLsizeiptr memRequired = verts.size() * sizeof(float) // vertices of triangles
                        + ids.size() * sizeof(int)         // 1 id per vertex
-                       + 2 * nopolys * sizeof(int);       // output buffer size
+                       + 3 * nopolys * sizeof(int);       // output buffer size
 
     if(memRequired > memLeft) {
         qDebug() << "polygons do not fit in memory. case not implemented!!" << memRequired << memLeft;
@@ -324,8 +324,8 @@ void GLFunction::setupPoints() {
 
     // creating output buffer.
     uint32_t nopolys = data->getPolyHandler()->getNoPolys();
-    texBuf.create(nopolys * 2 * sizeof(GLint), GL_R32I, result.data());
-    memLeft -= nopolys * 2 * sizeof(GLint);
+    texBuf.create(nopolys * 3 * sizeof(GLint), GL_R32I, result.data());
+    memLeft -= nopolys * 3 * sizeof(GLint);
 
     gpu_size = memLeft / (record_size * sizeof(float)); //number of records gpu buffer can fit.
     int number_of_passes = (int)ceil((result_size+0.0)/(gpu_size+0.0));
@@ -347,5 +347,5 @@ void GLFunction::setupPolygonIndex() {
     PolyHandler *poly = this->handler->dataHandler->getPolyHandler();
     memLeft -= (headSize + linkedListSize + poly->polys[poly->currentCollection].size() * sizeof(float)
             + poly->pindexes[poly->currentCollection].size() * sizeof(int));
-    memLeft -= (poly->getNoPolys() * sizeof(int) * 2);
+    memLeft -= (poly->getNoPolys() * sizeof(int) * 3);
 }
