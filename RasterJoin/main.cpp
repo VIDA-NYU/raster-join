@@ -27,9 +27,10 @@ set<size_t> attributes;
 uint64_t inputSize;
 float* points;
 bool inMemory;
-bool opAgg;
+bool opAgg, opTime;
 std::vector<QueryConstraint> constraints;
 int aggrAttrib;
+QString timeFile;
 
 //output
 QVector<int> agg;
@@ -210,7 +211,16 @@ void outputResults() {
     }
     {
         GLHandler::FunctionType joinType = getJoinOperator();
-        handler->printTimeStats(joinType);
+        QString timing = handler->printTimeStats(joinType);
+        if(opTime) {
+            QFile fi(timeFile);
+            if(!fi.open(QFile::Append | QFile::Text)) {
+                std::cerr << "could not open file for writing: " << timeFile.toStdString() << "\n";
+            }
+            QTextStream op(&fi);
+            op << timing << "\n";
+            fi.close();
+        }
         printResults(agg,10);
     }
 }
@@ -296,6 +306,13 @@ bool parseArguments(const QMap<QString,QString> &args) {
         aggrAttrib = (uint32_t)args["--avg"].toInt();
     } else {
         aggrAttrib = -1;
+    }
+
+    if(keys.contains("--outputTime")) {
+        opTime = true;
+        timeFile = args["--outputTime"].trimmed();
+    } else {
+        opTime = false;
     }
     return true;
 }

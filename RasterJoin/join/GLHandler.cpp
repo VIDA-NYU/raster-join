@@ -196,7 +196,7 @@ QVector<int> GLHandler::executeFunction(FunctionType fn) {
     return QVector<int>();
 }
 
-void GLHandler::printTimeStats(FunctionType fn) {
+QString GLHandler::printTimeStats(FunctionType fn) {
     std::cout << std::endl;
     QVector<QVector<quint64>> timings;
     if(this->functions.contains(fn)) {
@@ -224,8 +224,10 @@ void GLHandler::printTimeStats(FunctionType fn) {
             line += "\t0";
         }
         std::cout << line.toStdString() << std::endl;
+        return line;
     } else {
         qDebug() << "Function type" << fn << "not yet supported";
+        return "";
     }
 }
 

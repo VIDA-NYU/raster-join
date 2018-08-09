@@ -41,7 +41,7 @@ public:
 
     QVector<int> executeFunction(FunctionType fn);
     void setDataHandler(DataHandler *dataHandler);
-    void printTimeStats(FunctionType fn);
+    QString printTimeStats(FunctionType fn);
 
     void setAccuracyDistance(double size);
     void setPolyIndexResolution(int resx, int resy);
