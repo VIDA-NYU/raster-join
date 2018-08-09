@@ -237,6 +237,9 @@ void GLTextureBuffer::destroy()
 
     if( texId > 0 )
         glDeleteTextures( 1, &texId); //delete previously created texture
+
+    bufId = 0;
+    texId = 0;
 }
 
 GLPersistentBuffer::~GLPersistentBuffer()
