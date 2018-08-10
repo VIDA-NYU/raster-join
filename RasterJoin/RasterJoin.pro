@@ -93,11 +93,14 @@ DEFINES     += "NO_TIMER"
 CONFIG(debug, debug|release) {
 } else {
     DEFINES += "QT_NO_DEBUG_OUTPUT"
-    QMAKE_CXXFLAGS += -O3
 }
 
 # Unix configuration
 unix:!macx{
+    CONFIG(debug, debug|release) {
+    } else {
+        QMAKE_CXXFLAGS += -O3
+    }
     DEFINES += "LINUX"
 #    DEFINES += "USE_EGL"
 #    DEFINES += "FULL_SUMMARY_GL"
@@ -114,6 +117,10 @@ unix:!macx{
 
 # Win32 with msys64 toolchain
 win32-g++{
+    CONFIG(debug, debug|release) {
+    } else {
+        QMAKE_CXXFLAGS += -O3
+    }
     QMAKE_CXXFLAGS += -fopenmp
     QMAKE_LFLAGS   += -fopenmp
 
@@ -141,8 +148,7 @@ win32-msvc*{
     }
 
     #http://stackoverflow.com/questions/5134245/how-to-set-different-qmake-configuration-depending-on-debug-release
-    QMAKE_CXXFLAGS += -fopenmp
-    QMAKE_LFLAGS   += -fopenmp
+    QMAKE_CXXFLAGS += -openmp
 
     LIBS += "-L$$(VCPKG_HOME)/installed/x64-windows/$${WINDOWS_BIN_PATH}/bin"
     LIBS += "-ladvapi32"
