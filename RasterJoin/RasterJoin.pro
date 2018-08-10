@@ -38,7 +38,7 @@ SOURCES += main.cpp \
     join/IndexJoin.cpp \
     join/HybridJoin.cpp
 
-HEADERS += triangle/triangle.h \
+HEADERS += \
     triangulation/clip2tri/clip2tri.h \
     triangulation/clipper/clipper.hpp \
     triangulation/poly2tri/common/shapes.h \
@@ -113,7 +113,7 @@ unix:!macx{
 }
 
 # Win32 with msys64 toolchain
-win32{
+win32-g++{
     QMAKE_CXXFLAGS += -fopenmp
     QMAKE_LFLAGS   += -fopenmp
 
@@ -126,35 +126,28 @@ win32{
     LIBS += "-ladvapi32"
 }
 
-#win32{
-#    CONFIG += console
-#    DEFINES += GLEW_STATIC
+win32-msvc*{
+    CONFIG += console
 
-#    #http://stackoverflow.com/questions/5134245/how-to-set-different-qmake-configuration-depending-on-debug-release
-#    CONFIG(debug, debug|release) {
-#        WINDOWS_BIN_PATH = ../thirdparty/windows-bin-debug
-#    } else {
-#        WINDOWS_BIN_PATH = ../thirdparty/windows-bin-release
-#    }
+    INCLUDEPATH += $$(VCPKG_HOME)/installed/x64-windows/include
 
-#    #http://stackoverflow.com/questions/5134245/how-to-set-different-qmake-configuration-depending-on-debug-release
-#    QMAKE_CXXFLAGS += -fopenmp
-#    QMAKE_LFLAGS   += -fopenmp
+    #http://stackoverflow.com/questions/5134245/how-to-set-different-qmake-configuration-depending-on-debug-release
+    CONFIG(debug, debug|release) {
+        WINDOWS_BIN_PATH = debug/
+        LIBS += "-L$$(VCPKG_HOME)/installed/x64-windows/$${WINDOWS_BIN_PATH}/lib" -lglew32d -lboost_filesystem-vc140-mt-gd -lboost_program_options-vc140-mt-gd -lboost_iostreams-vc140-mt-gd
+    } else {
+        WINDOWS_BIN_PATH = ./
+        LIBS += "-L$$(VCPKG_HOME)/installed/x64-windows/$${WINDOWS_BIN_PATH}/lib" -lglew32 -lboost_filesystem-vc140-mt -lboost_program_options-vc140-mt -lboost_iostreams-vc140-mt
+    }
 
-#    #INCLUDE
-#    INCLUDEPATH += $${WINDOWS_BIN_PATH}/glew/include
-#    INCLUDEPATH += "$$(CUDA_PATH)/include"
-#    INCLUDEPATH += "$$(BOOST_PATH)"
-#    INCLUDEPATH += "$$(UniversalCRT_IncludePath)"
+    #http://stackoverflow.com/questions/5134245/how-to-set-different-qmake-configuration-depending-on-debug-release
+    QMAKE_CXXFLAGS += -fopenmp
+    QMAKE_LFLAGS   += -fopenmp
 
-#    #LIBS
-#    LIBS += "-L$$(CUDA_PATH)/lib/x64" -lOpenCL
-#    LIBS += "-ladvapi32"
-#    LIBS += "-L$$(BOOST_LIB_PATH)"
-#    LIBS += "-L$$(UniversalCRT_LibraryPath_x64)"
-#    LIBS += -L$${WINDOWS_BIN_PATH}/glew/lib -lglew32s
-#    LIBS += "-LC:/Program Files (x86)/Microsoft SDKs/Windows/v7.1A/Lib/x64" -lopengl32
-#}
+    LIBS += "-L$$(VCPKG_HOME)/installed/x64-windows/$${WINDOWS_BIN_PATH}/bin"
+    LIBS += "-ladvapi32"
+    LIBS += -lopengl32 -lRpcRT4
+}
 
 RESOURCES += \
     shaders.qrc
