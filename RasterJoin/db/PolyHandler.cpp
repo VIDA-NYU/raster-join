@@ -1,6 +1,8 @@
 #include "PolyHandler.hpp"
 
 #include <QFile>
+#include <QFileInfo>
+#include <QDir>
 #include <QTextStream>
 #include <QDebug>
 #include <cassert>
@@ -31,7 +33,8 @@ void PolyHandler::initFromFile(QString polyIndex) {
         QStringList list = line.split(",");
         QString name = list[0];
         QString file = list[1];
-        this->addPolygonCollection(name,file);
+        QString dir = QFileInfo(fi).dir().absolutePath();
+        this->addPolygonCollection(name,dir + "/" + file);
         currentCollection = name;
     }
 }

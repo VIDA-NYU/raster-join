@@ -30,7 +30,7 @@ bool inMemory;
 bool opAgg, opTime;
 std::vector<QueryConstraint> constraints;
 int aggrAttrib;
-QString timeFile;
+QString timeFile, aggFile;
 
 //output
 QVector<int> agg;
@@ -171,9 +171,8 @@ void runExperiment() {
 
 void printResults(QVector<int> agg, int top, uint32_t endTime = 0, int res = 0) {
     int polySize = agg.size() / 3;
-    std::cout << polySize << "\n";
     if(endTime > 0) {
-        QString fileName = "../results/vldb2018/laptop/accuracy/raster_" + QString::number(endTime) + "_" + QString::number(res) + ".csv";
+        QString fileName = aggFile + "/raster_" + QString::number(endTime) + "_" + QString::number(res) + ".csv";
         QFile f(fileName);
         if (!f.open(QFile::WriteOnly | QFile::Text)) return;
         QTextStream op(&f);
@@ -207,7 +206,7 @@ void outputResults() {
         if(getJoinOperator() != GLHandler::RasterJoinFn) {
             accuracy = 0;
         }
-        printResults(agg,agg.size()/2,end_time,accuracy);
+        printResults(agg,agg.size()/3,end_time,accuracy);
     }
     {
         GLHandler::FunctionType joinType = getJoinOperator();
@@ -221,7 +220,7 @@ void outputResults() {
             op << timing << "\n";
             fi.close();
         }
-        printResults(agg,10);
+//        printResults(agg,10);
     }
 }
 
@@ -293,6 +292,7 @@ bool parseArguments(const QMap<QString,QString> &args) {
         inMemory = false;
     }
     if(keys.contains("--opAggregation")) {
+        aggFile = args["--opAggregation"];
         opAgg = true;
     } else {
         opAgg = false;
