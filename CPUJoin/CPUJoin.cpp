@@ -75,7 +75,7 @@ QVector<int> CPUJoin::execute() {
     int64_t nps = int64_t(inputSize*2);
 
     QVector<int> agg;
-    agg = QVector<int>(noPolys,0);
+    QVector<int> pagg;
 
     QElapsedTimer timer;
     time = QVector<quint64>(nIter,0);
@@ -88,10 +88,10 @@ QVector<int> CPUJoin::execute() {
     } else {
         mt = omp_get_max_threads();
     }
-    QVector<int> pagg(mt * noPolys,0);
-
     for (size_t k=0; k<nIter; k++) {
         timer.start();
+        agg = QVector<int>(noPolys,0);
+        pagg = QVector<int>(mt * noPolys,0);
         #pragma omp parallel for
         for(int64_t i = 0;i < nps;i += 2) {
             int th = omp_get_thread_num();
