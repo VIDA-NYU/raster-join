@@ -8,7 +8,6 @@
 #include <QElapsedTimer>
 
 #include "Utils.h"
-#include "GLData.hpp"
 #include "UsefulFuncs.hpp"
 #include "Record.hpp"
 
