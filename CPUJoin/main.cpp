@@ -108,7 +108,7 @@ void outputResults() {
         op << timing << "\n";
         fi.close();
     }
-    printResults(agg,agg.size());
+//    printResults(agg,agg.size());
 }
 
 void setupExperiment() {
