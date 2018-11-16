@@ -62,7 +62,7 @@ The source code for the three GPU techniques.
 
 **Example:** ./RasterJoin --nIter 10 --joinType raster --backendIndexName ./taxi-backend --polygonList ../data/nyc_polys.txt --polygonDataset neigh --locAttrib 1 --indexRes 1024 --nAttrib 2 --startTime 1230768000 --endTime 1272808000 --inmem 
 
-## Data used in the Paper:
+## Data used in the Paper and Executable:
 
 The data to be used for reproducing the results involving the NYC Taxi data and the neighborhood polygons can be found at: https://drive.google.com/open?id=1ht2cU21UL2vf1LnwZgdemWGitEBKvzXZ
 
