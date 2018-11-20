@@ -36,7 +36,8 @@ SOURCES += main.cpp \
     db/DataHandler.cpp \
     db/PolyHandler.cpp \
     join/IndexJoin.cpp \
-    join/HybridJoin.cpp
+    join/HybridJoin.cpp \
+    join/RasterJoinBounds.cpp
 
 HEADERS += \
     triangulation/clip2tri/clip2tri.h \
@@ -76,7 +77,8 @@ HEADERS += \
     triangulation/TestTriangulation.hpp \
     join/IndexJoin.hpp \
     join/HybridJoin.hpp \
-    test/baseline.hpp
+    test/baseline.hpp \
+    join/RasterJoinBounds.hpp
 
 INCLUDEPATH += -I ./triangulation/
 INCLUDEPATH += -I ./opengl/

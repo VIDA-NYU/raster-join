@@ -58,6 +58,8 @@ void PolyHandler::addPolygonCollection(QString collectionName, const PolygonColl
     QVector<float> polyVerts;
     QVector<float> outline;
     QVector<int> pindex;
+    QVector<float> outlineIds;
+    QVector<float> edgeIds;
     for(int i = 0;i < polys.size();i ++) {
         pindex << polyVerts.size() / 2;
         for(size_t j = 0;j < polys[i].size();j ++) {
@@ -65,12 +67,16 @@ void PolyHandler::addPolygonCollection(QString collectionName, const PolygonColl
 
             outline << polys[i][j].x << polys[i][j].y;
             outline << polys[i][(j + 1) % polys[i].size()].x << polys[i][(j + 1) % polys[i].size()].y;
+            outlineIds << i << i;
+            edgeIds << j << j;
         }
     }
     pindex << polyVerts.size() / 2;
     this->polys.insert(collectionName, polyVerts);
     this->pindexes.insert(collectionName, pindex);
     this->outlines.insert(collectionName,outline);
+    this->oids.insert(collectionName,outlineIds);
+    this->eids.insert(collectionName,edgeIds);
 }
 
 void PolyHandler::getTriangulation(std::vector<float> &verts, std::vector<float> &ids) {
@@ -110,6 +116,10 @@ void PolyHandler::getTriangulation(std::vector<float> &verts, std::vector<float>
 
 QVector<float> PolyHandler::getPolyOutline() {
     return this->outlines[currentCollection];
+}
+
+QVector<float> PolyHandler::getOutlineIds() {
+    return this->oids[currentCollection];
 }
 
 Bound PolyHandler::getBounds() {

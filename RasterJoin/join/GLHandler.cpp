@@ -7,6 +7,7 @@
 #include "RasterJoin.hpp"
 #include "IndexJoin.hpp"
 #include "HybridJoin.hpp"
+#include "RasterJoinBounds.hpp"
 
 #include "UsefulFuncs.hpp"
 #include <algorithm>
@@ -171,6 +172,12 @@ void GLHandler::initFunctions() {
         PGLFunction function = PGLFunction(new HybridJoin(this));
         function->initGL();
         this->functions[HybridJoinFn] = function;
+    }
+
+    {
+        PGLFunction function = PGLFunction(new RasterJoinBounds(this));
+        function->initGL();
+        this->functions[RasterJoinBoundFn] = function;
     }
 
 #ifdef FULL_SUMMARY_GL

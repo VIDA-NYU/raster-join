@@ -24,6 +24,7 @@ public:
         RasterJoinFn = 0,
         IndexJoinFn,
         HybridJoinFn,
+        RasterJoinBoundFn,
         FunctionCount // get no. of functions
     };
 

@@ -11,5 +11,7 @@
         <file>shaders/hybrid.glsl</file>
         <file>shaders/index-size.glsl</file>
         <file>shaders/create-index.glsl</file>
+        <file>shaders/line-bound.frag</file>
+        <file>shaders/line-bound.vert</file>
     </qresource>
 </RCC>

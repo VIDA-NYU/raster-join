@@ -34,6 +34,7 @@ public:
     void initFromFile(QString polyIndex);
     void getTriangulation(std::vector<float> &verts, std::vector<float> &ids);
     QVector<float> getPolyOutline();
+    QVector<float> getOutlineIds();
     Bound getBounds();
     int getNoPolys();
 
@@ -47,6 +48,8 @@ public:
     QMap<QString, QVector<float> > polys;
     QMap<QString, QVector<int> > pindexes;
     QMap<QString, QVector<float> > outlines;
+    QMap<QString, QVector<float> > oids;
+    QMap<QString, QVector<float> > eids;
     QString currentCollection;
 
 public:
