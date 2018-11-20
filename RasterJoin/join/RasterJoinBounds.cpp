@@ -77,6 +77,9 @@ void RasterJoinBounds::updateBuffers() {
 
     GLFunction::size = QSize(resx, resy);
     if (this->polyFbo.isNull() || this->polyFbo->size()!= GLFunction::size) {
+        this->polyFbo.clear();
+        this->pointsFbo.clear();
+
         this->polyFbo.reset(new FBOObject(GLFunction::size,FBOObject::NoAttachment,GL_TEXTURE_2D,GL_RGBA32F));
         this->pointsFbo.reset(new FBOObject(GLFunction::size,FBOObject::NoAttachment,GL_TEXTURE_2D,GL_RGBA32F));
     }
@@ -235,15 +238,13 @@ void RasterJoinBounds::drawOutline() {
 #ifdef PROFILE_GL
     timer.restart();
 #endif
-    qDebug() << "sizes: " << psize << isize;
+    qDebug() << "sizes: " << psize << isize << esize;
     this->buffer->resize(GL_DYNAMIC_DRAW,psize + isize + esize);
     this->buffer->setData(GL_DYNAMIC_DRAW,pts,psize,0);
     this->buffer->setData(GL_DYNAMIC_DRAW,ids,isize,psize);
     this->buffer->setData(GL_DYNAMIC_DRAW,edids,esize,psize + isize);
 
     this->polyFbo->bind();
-//    glClearColor(1,1,1,1);
-//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE,GL_ONE);
@@ -284,26 +285,19 @@ void RasterJoinBounds::drawOutline() {
     ptime = timer.elapsed();
     this->polyMemTime.last() += ptime;
 #endif
-    for(int t = 0;t < 1;t ++) {
-        if(t == 0) {
-            glEnable(GL_CONSERVATIVE_RASTERIZATION_NV);
-        }
-        glClearColor(0,0,0,0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        outlineShader->setUniformValue("cons",t);
+    glEnable(GL_CONSERVATIVE_RASTERIZATION_NV);
+    glClearColor(0,0,0,0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 #ifdef PROFILE_GL
-        timer.restart();
+    timer.restart();
 #endif
-        glDrawArrays(GL_LINES, 0, psize / (2 * sizeof(float)));
+    glDrawArrays(GL_LINES, 0, psize / (2 * sizeof(float)));
 #ifdef PROFILE_GL
-        glFinish();
-        ptime = timer.elapsed();
-        this->polyRenderTime.last() += ptime;
+    glFinish();
+    ptime = timer.elapsed();
+    this->polyRenderTime.last() += ptime;
 #endif
-        if(t == 0) {
-            glDisable(GL_CONSERVATIVE_RASTERIZATION_NV);
-        }
-    }
+    glDisable(GL_CONSERVATIVE_RASTERIZATION_NV);
     glDisableVertexAttribArray(0);
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
@@ -313,9 +307,23 @@ void RasterJoinBounds::performJoin() {
     GLsizeiptr origMem = memLeft;
     this->setupPolygons();
     this->setupPoints();
+    QElapsedTimer timer;
 
-    this->bounds = QVector<int>(this->handler->dataHandler->getPolyHandler()->getNoPolys() * 4,0);
+#ifdef PROFILE_GL
+    timer.start();
+#endif
+    DataHandler * data = this->handler->dataHandler;
+    PolyHandler *poly = data->getPolyHandler();
+    this->polyBufferGL.create(poly->polys[poly->currentCollection].size() * sizeof(float), GL_RG32F, poly->polys[poly->currentCollection].data());
+    this->pindexBufferGL.create(poly->pindexes[poly->currentCollection].size() * sizeof(int), GL_R32I,poly->pindexes[poly->currentCollection].data());
+    this->bounds = QVector<int>(poly->getNoPolys() * 4,0);
     this->approxBuf.create(this->bounds.size() * sizeof(GLint), GL_R32I, bounds.data());
+
+#ifdef PROFILE_GL
+    glFinish();
+    qint64 ptime = timer.elapsed();
+    this->polyMemTime.last() += ptime;
+#endif
 
 //    GLsizeiptr memSize = 0;
 //    for(int j = 0;j < inputData.size();j ++) {
@@ -324,7 +332,7 @@ void RasterJoinBounds::performJoin() {
     pbuffer->resize(GL_DYNAMIC_DRAW,this->handler->maxBufferSize);
 
     // setup rendering passes
-    Bound bound = this->handler->dataHandler->getPolyHandler()->getBounds();
+    Bound bound = poly->getBounds();
     QPointF diff = bound.rightTop - bound.leftBottom;
     diff.setX(diff.x() / splitx);
     diff.setY(diff.y() / splity);
@@ -332,7 +340,6 @@ void RasterJoinBounds::performJoin() {
     uint32_t result_size = ptsSize;
     GLsizeiptr  passOffset = 0;
 
-    QElapsedTimer timer;
     qint64 boundTime = 0;
     for(int i = 0; i < noPtPasses; i++) {
         GLsizeiptr offset = 0;
@@ -349,7 +356,6 @@ void RasterJoinBounds::performJoin() {
                 this->mvp = getMVP(lb,rt);
                 this->renderPoints();
                 this->renderPolys();
-//                polyFbo->toImage().save("../polys.png");
                 timer.restart();
                 this->drawOutline();
                 qint64 atime = timer.elapsed();
@@ -370,33 +376,8 @@ void RasterJoinBounds::performJoin() {
     approxBuf.destroy();
     memLeft = origMem;
 
-#if 0
-    int np = bounds.size() / 4;
-    QString fileName = "../results/vldb2018/laptop/accuracy/new_px_ct_" + QString::number(1341128000) + "_" + QString::number(cellSizeMeters) + ".csv";
-    QFile f(fileName);
-    if (!f.open(QFile::WriteOnly | QFile::Text)) return;
-    QTextStream op(&f);
-    for(int i = 0;i < np;i ++) {
-        int fn = bounds[i];
-        int fp = bounds[i + np];
-        int fn1 = bounds[i + np * 2];
-        int fp1 = bounds[i + np * 3];
-//        int fn5 = fn1 / 2;
-//        int fp5 = fp1 / 2;
-        op << i << "\t" << (result[i] - fp1) << "\t" << (result[i] + fn1) << "\t"
-//                        << (result[i] - fp5) << "\t" << (result[i] + fn5) << "\t"
-                        << (result[i] - fp) << "\t" << (result[i] + fn) << "\n";
-//        op << i << "\t" << (result[i] - fp) << "\t" << (result[i] + fn) << "\n";
-
-//        fn = bounds[i + 2*np];
-//        fp = bounds[i + 3*np];
-//        op << i << "\t" << fp << "\t" << fn << "\n";
-    }
-    f.close();
-#endif
-
 //    qDebug() << "min max: " << bounds[0] << bounds[1] << bounds[2] << bounds[3];
-//    std::cout << "additional time required:" << boundTime;
+    std::cout << "additional time required:" << boundTime;
 }
 
 QVector<int> RasterJoinBounds::executeFunction() {

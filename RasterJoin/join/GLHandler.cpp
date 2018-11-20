@@ -203,6 +203,14 @@ QVector<int> GLHandler::executeFunction(FunctionType fn) {
     return QVector<int>();
 }
 
+QVector<int> GLHandler::getErrorBounds(FunctionType fn) {
+    if(fn == RasterJoinBoundFn) {
+        QSharedPointer<RasterJoinBounds> rjb = this->functions[fn].staticCast<RasterJoinBounds>();
+        return rjb->bounds;
+    }
+    return QVector<int>();
+}
+
 QString GLHandler::printTimeStats(FunctionType fn) {
     std::cout << std::endl;
     QVector<QVector<quint64>> timings;
@@ -217,9 +225,10 @@ QString GLHandler::printTimeStats(FunctionType fn) {
         timings << this->functions[fn]->polyIndexTime;
         timings << this->functions[fn]->backendQueryTime;
 
+        int fnId = (fn == RasterJoinBoundFn)?5:fn;
         QString line = QString::number(this->functions[fn]->ptsSize) + "\t\t"
                 + QString::number(this->functions[fn]->polySize) + "\t"
-                + QString::number(fn) + "\t"
+                + QString::number(fnId) + "\t"
                 + QString::number(this->functions[fn]->noPtPasses) + "\t"
                 + QString::number(this->functions[fn]->noConstraints);
         for(int i = 0;i < timings.size();i ++) {

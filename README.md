@@ -36,7 +36,7 @@ The source code for the three GPU techniques.
 
 --accuracy: The epsilon-bound in meters. Optional argument. The default value is 100.
 
---joinType: Choose GPU technique. There are three options: raster, hybrid and index.
+--joinType: Choose GPU technique. There are four options: raster, errorbounds, hybrid and index. Here, errorbounds corresponding to the raster approach which computes the aggregation range (see paragraph **Estimating the Result Range** of Section 5 in the paper. Currently implemented only for Count() aggregation).
 
 --backendIndexName: Prefix path to the backend index containing the data records. 
 
@@ -54,7 +54,7 @@ The source code for the three GPU techniques.
 
 --inmem: Choice of in-memory (GPU) versus out-of-core (GPU) execution. Optional argument. The default is out-of-core (GPU) execution. 
 
---opAgregation:  Optional argument. Choice between printing the aggregation result for every region (when this argument is present) and obtaining only the corresponding timing statistics (the default behavior).
+--opAggregation:  Optional argument. Choice between printing the aggregation result for every region (when this argument is present) and obtaining only the corresponding timing statistics (the default behavior).
 
 --inputSize: Optional argument. Allows to define the input size in numbers of records rather than by manipulating the startTime and endTime. 
 
@@ -62,7 +62,7 @@ The source code for the three GPU techniques.
 
 **Example:** ./RasterJoin --nIter 10 --joinType raster --backendIndexName ./taxi-backend --polygonList ../data/nyc_polys.txt --polygonDataset neigh --locAttrib 1 --indexRes 1024 --nAttrib 2 --startTime 1230768000 --endTime 1272808000 --inmem 
 
-## Data used in the Paper and Executable:
+## Data used in the Paper:
 
 The data to be used for reproducing the results involving the NYC Taxi data and the neighborhood polygons can be found at: https://drive.google.com/open?id=1ht2cU21UL2vf1LnwZgdemWGitEBKvzXZ
 

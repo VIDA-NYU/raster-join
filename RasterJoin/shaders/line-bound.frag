@@ -5,7 +5,6 @@ uniform isamplerBuffer pindex;
 
 uniform sampler2D pointsTex;
 
-uniform int cons;
 uniform int offset;
 uniform ivec2 res;
 
@@ -250,36 +249,14 @@ void main()
             }
             int toAdd = int(ceil(frac * val));
             if(inside) {
+                fragColor = vec4(1,0,0,1);
                 imageAtomicAdd(bufferAgg, int(col) + offset, toAdd);
                 imageAtomicAdd(bufferAgg, int(col) + offset * 3, int(val));
             } else {
                 imageAtomicAdd(bufferAgg, int(col), toAdd);
                 imageAtomicAdd(bufferAgg, int(col) + offset * 2, int(val));
+                fragColor = vec4(0,0,1,1);
             }
         }
     }
 }
-
-//void oldmain()
-//{
-//    int val = int (ceil(texelFetch(pointsTex, ivec2(gl_FragCoord.xy), 0).r));
-//    if(val != 0) {
-//        vec2 fpt = vec2(gl_FragCoord.x / res.x,gl_FragCoord.y / res.y);
-//        fpt = fpt * 2 - vec2(1,1);
-//        vec4 pt = inverse(mvpMatrix) * vec4(fpt,0,1);
-//        pt /= pt.w;
-
-//        bool inside = isInsidePoly(int(col), pt.x, pt.y);
-//        float frac = getApproxFraction(false, polyPt);
-
-//        int toAdd = int(ceil(frac * val));
-//        float frac1 = (frac == 0)?0:1;
-//        if(inside) {
-//            imageAtomicAdd(bufferAgg, int(col) + offset, toAdd);
-//            imageAtomicAdd(bufferAgg, int(col) + offset * 3, int(val * frac1));
-//        } else {
-//            imageAtomicAdd(bufferAgg, int(col), toAdd);
-//            imageAtomicAdd(bufferAgg, int(col) + offset * 2, int(val * frac1));
-//        }
-//    }
-//}

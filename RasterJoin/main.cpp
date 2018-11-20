@@ -33,7 +33,7 @@ int aggrAttrib;
 QString timeFile, aggFile;
 
 //output
-QVector<int> agg;
+QVector<int> agg, bounds;
 
 void ensureOpenGLFormat()
 {
@@ -67,6 +67,9 @@ GLHandler::FunctionType getJoinOperator() {
     } else if(joinType == "index") {
         // brute force join - accurate
         joinOperator = GLHandler::IndexJoinFn;
+    } else if(joinType == "errorbounds") {
+        // compute error bounds of raster approach
+        joinOperator = GLHandler::RasterJoinBoundFn;
     } else {
         cerr << "Wrong join type " << endl;
         exit(0);
@@ -166,7 +169,25 @@ void runExperiment() {
     for (size_t k=0; k<nIter; k++) {
         qDebug() << "iteration" << k;
         agg = handler->executeFunction(joinType);
+        bounds = handler->getErrorBounds(joinType);
     }
+}
+
+void outputErrorBounds(uint32_t endTime = 0, int res = 0) {
+    int np = bounds.size() / 4;
+    QString fileName = aggFile + "/err_bound_" + QString::number(endTime) + "_" + QString::number(res) + ".csv";
+    QFile f(fileName);
+    if (!f.open(QFile::WriteOnly | QFile::Text)) return;
+    QTextStream op(&f);
+    for(int i = 0;i < np;i ++) {
+        int fn = bounds[i];
+        int fp = bounds[i + np];
+        int fn1 = bounds[i + np * 2];
+        int fp1 = bounds[i + np * 3];
+        op << i << "\t" << (agg[i] - fp1) << "\t" << (agg[i] + fn1) << "\t"
+                        << (agg[i] - fp) << "\t" << (agg[i] + fn) << "\n";
+    }
+    f.close();
 }
 
 void printResults(QVector<int> agg, int top, uint32_t endTime = 0, int res = 0) {
@@ -203,10 +224,14 @@ void printResults(QVector<int> agg, int top, uint32_t endTime = 0, int res = 0) 
 
 void outputResults() {
     if(opAgg) {
-        if(getJoinOperator() != GLHandler::RasterJoinFn) {
+        if(getJoinOperator() != GLHandler::RasterJoinFn && getJoinOperator() != GLHandler::RasterJoinBoundFn) {
             accuracy = 0;
         }
-        printResults(agg,agg.size()/3,end_time,accuracy);
+        if(getJoinOperator() == GLHandler::RasterJoinBoundFn) {
+            outputErrorBounds(end_time,accuracy);
+        } else {
+            printResults(agg,agg.size()/3,end_time,accuracy);
+        }
     }
     {
         GLHandler::FunctionType joinType = getJoinOperator();

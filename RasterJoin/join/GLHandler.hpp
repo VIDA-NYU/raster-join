@@ -41,6 +41,7 @@ public:
     void initializeGL();
 
     QVector<int> executeFunction(FunctionType fn);
+    QVector<int> getErrorBounds(FunctionType fn);
     void setDataHandler(DataHandler *dataHandler);
     QString printTimeStats(FunctionType fn);
 
