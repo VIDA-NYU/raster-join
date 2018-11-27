@@ -60,7 +60,7 @@ The source code for the three GPU techniques.
 
 --avg: Computation of avg() aggregation function over the specified attribute. Optional argument. Count() is the default computation. 
 
---gpuMem GPU memory usage in Megabytes. Optional argument. The default is 2000 MB. 
+--gpuMem: GPU memory usage in Megabytes. Optional argument. The default is 2048 MB. 
 
 --outputTime: Path to output file containing the performance results. Optional argument.
 
