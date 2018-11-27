@@ -93,15 +93,15 @@ The source code for the CPU baseline (both single-core and parallel).
 
 ## Reproducing paper's experiments:
  The **experiments** directory provides all the required resources for reproducing the results presented in the paper.
- It consists of 4 subdirectories:
+ It consists of the following subdirectories:
  
- - **run-scripts**: There is one Windows powershell script for each experiment. The script takes 3 arguments: 1) the location of the executable, 2) the path to the data directory (which has the taxi and poly subdirectories), and the path to store the result files.
- 
- The executable can be downloaded in the release section or compiled from the provided source code.
- 
-### Data used in the paper:
+ - **run-scripts**: There is one Windows powershell script for each experiment. The script takes 3 arguments: 1) the location of the executable, 2) the path to the data directory (which has the taxi and poly subdirectories), and, 3) the path to store the result files.
 
-The data to be used for reproducing the results involving the NYC Taxi data and the neighborhood polygons can be found at: https://drive.google.com/open?id=1ht2cU21UL2vf1LnwZgdemWGitEBKvzXZ
+The executable can be downloaded in the release section or compiled from the provided source code.
+
+**Data used in the paper:**
+
+The following shared folder contains the required data for reproducing the results involving the NYC Taxi data and the neighborhood polygons: https://drive.google.com/open?id=1ht2cU21UL2vf1LnwZgdemWGitEBKvzXZ
 
 The **readme.txt** file in the above shared folder has instructions on using the provided files.
 
