@@ -32,6 +32,8 @@ std::vector<QueryConstraint> constraints;
 int aggrAttrib;
 QString timeFile, aggFile;
 
+int64_t gpuMemInMB;
+
 //output
 QVector<int> agg, bounds;
 
@@ -139,7 +141,7 @@ void setupExperiment() {
             dataHandler->setAggregation(Avg,aggrAttrib);
         }
 
-        handler = GLHandler::getInstance(inMemory);
+        handler = GLHandler::getInstance(gpuMemInMB, inMemory);
         if(handler == NULL) {
             std::cout << "Failed to obtain handler";
             exit(0);
@@ -338,6 +340,12 @@ bool parseArguments(const QMap<QString,QString> &args) {
         timeFile = args["--outputTime"].trimmed();
     } else {
         opTime = false;
+    }
+    if(keys.contains("--gpuMem")) {
+        gpuMemInMB = (int64_t)args["--gpuMem"].toLongLong();
+    } else {
+        // default is 3GB = 3072MB
+        gpuMemInMB = 8LL * 256LL;
     }
     return true;
 }

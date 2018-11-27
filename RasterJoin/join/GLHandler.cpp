@@ -40,12 +40,12 @@ static const EGLint pbufferAttribs[] = {
 
 GLHandler* GLHandler::instance = NULL;
 
-GLHandler::GLHandler(bool inMemory) : dataHandler(NULL), inmem(inMemory) {
+GLHandler::GLHandler(int64_t gpuMemMB, bool inMemory) : dataHandler(NULL), inmem(inMemory) {
     // OpenGL does not provide a way for gathering info about gpu memory. should use it as user parameter.
     // for now using 3Gb with a 100mb buffer for other small data / OS
     // 10LL was used for ooc experiments to get consistent results
     // 4LL for hybrid join due to some emmory leak when using 8192 fbo res
-    this->maxBufferSize = 8LL * 256LL * 1024LL * 1024LL;
+    this->maxBufferSize = gpuMemMB * 1024LL * 1024LL;
 	#ifdef FULL_SUMMARY_GL
     	qDebug() << "Max GPU buffer size" << this->maxBufferSize << sizeof(GLsizeiptr);
 	#endif
@@ -61,9 +61,9 @@ GLHandler::~GLHandler() {
     GLHandler::instance = NULL;
 }
 
-GLHandler *GLHandler::getInstance(bool inMemory) {
+GLHandler *GLHandler::getInstance(int64_t gpuMemMB, bool inMemory) {
     if(instance == NULL) {
-        instance = new GLHandler(inMemory);
+        instance = new GLHandler(gpuMemMB, inMemory);
     }
     return instance;
 }

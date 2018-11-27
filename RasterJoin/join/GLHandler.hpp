@@ -29,12 +29,12 @@ public:
     };
 
 private:
-    GLHandler(bool inMemory);
+    GLHandler(int64_t gpuMemMB, bool inMemory);
     ~GLHandler();
     static GLHandler* instance;
 
 public:
-    static GLHandler* getInstance(bool inMemory = false);
+    static GLHandler* getInstance(int64_t gpuMemMB = 2048LL, bool inMemory = false);
 
 public:
     void setupContext();
