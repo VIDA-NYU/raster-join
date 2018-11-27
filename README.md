@@ -7,7 +7,7 @@ Visual exploration of spatial data relies heavily on spatial aggregation queries
 
 ## Subproject directories:
 
-### BackendIndex
+### Backend Index
 The code for creating a simple disk-based hash grid index. We only use the backend index as a way to select data of varying sizes for the experiments.
 
 **Usage:**  BackendIndex --inputFilename path_to_file --backendIndexName prefix_path
@@ -30,7 +30,7 @@ For that, you need to implement the interface named Record.hpp for your data set
 ### Raster Join
 The source code for the three GPU techniques. 
 
-**Usage:** RasterJoin [--nIter number_of_iterations] [--accuracy epsilon_bound_in_meters] --joinType [raster | hybrid | index] --backendIndexName prefix_path --polygonList  path_to_file --polygonDataset name_of_polygon_collection --locAttrib offset_of_the_location_attribute_in_the_record [--indexRes number_of_cells_per_dim] [--nAttrib number_of_filtered_attributes]--startTime start_time --endTime end_time [--inmem] [--opAggregation ] [--inputSize ] [--avg attribute] 
+**Usage:** RasterJoin [--nIter number_of_iterations] [--accuracy epsilon_bound_in_meters] --joinType [raster | hybrid | index] --backendIndexName prefix_path --polygonList  path_to_file --polygonDataset name_of_polygon_collection --locAttrib offset_of_the_location_attribute_in_the_record [--indexRes number_of_cells_per_dim] [--nAttrib number_of_filtered_attributes] --startTime start_time --endTime end_time [--inmem] [--opAggregation ] [--inputSize ] [--avg attribute] [--gpuMem size_in_megabytes] [--outputTime path_to_file]
 
 --nIter: Define how many times the query should be executed (for performance measurements only). Optional argument. The default value is 1.
 
@@ -60,7 +60,37 @@ The source code for the three GPU techniques.
 
 --avg: Computation of avg() aggregation function over the specified attribute. Optional argument. Count() is the default computation. 
 
-**Example:** ./RasterJoin --nIter 10 --joinType raster --backendIndexName ./taxi-backend --polygonList ../data/nyc_polys.txt --polygonDataset neigh --locAttrib 1 --indexRes 1024 --nAttrib 2 --startTime 1230768000 --endTime 1272808000 --inmem 
+--gpuMem GPU memory usage in Megabytes. Optional argument. The default is 2000 MB. 
+
+--outputTime: Path to output file containing the performance results. Optional argument.
+
+**Example:** ./RasterJoin --nIter 10 --joinType raster --backendIndexName <path to data folder>/taxi/taxi_full_index --polygonList <path to data folder>/polys/nyc_polys.txt --polygonDataset neigh --locAttrib 1 --indexRes 1024 --nAttrib 2 --startTime 1230768000 --endTime 1272808000 –inmem --outputTime <path to output folder>/scalability/taxi-in-memory.txt
+  
+### CPU Join
+The source code for the CPU baseline (both single-core and parallel).
+
+**Usage:** CPUJoin [--nIter number_of_iterations] [--singleCore] --backendIndexName prefix_path --polygonList path_to_file --polygonDataset name_of_polygon_collection --locAttrib offset_of_the_location_attribute_in_the_record [--indexRes number_of_cells_per_dim] --startTime start_time --endTime end_time [--outputTime path_to_file]
+
+--nIter: Define how many times the query should be executed (for performance measurements only). Optional argument. The default value is 1.
+
+--singleCore: Choice of single-core versus parallel execution. Optional argument. The default is parallel. 
+
+--backendIndexName: Prefix path to the backend index containing the data records.
+
+--polygonList: Path to the text file containing the polygon data.
+
+--polygonDataset: Give a name for the polygon dataset.
+
+--locAttrib: Denote which is the spatial (location) attribute of the record. For taxi records it is the first attribute (locAttrib = 1).
+
+--indexRes: The resolution of the polygon index (in number of cells per dimension). Optional argument. The default value is 1024.
+
+--startTime and --endTime: Define a time range and retrieve the corresponding data from the backend. For our experiments, we fixed the start time and increased the end time in order to get increasing input sizes for the aggregate query.
+
+--outputTime: Path to output file containing the performance results. Optional argument.
+
+ **Example:** ./CPUJoin --nIter 6 --backendIndexName <path to data folder>/taxi/taxi_full_index --polygonList  <path to data folder>/polys/nyc_polys.txt --polygonDataset neigh --locAttrib 1 --indexRes 1024 --startTime 1230768000 --endTime 1272808000 --outputTime <path to output folder>/scalability/taxi-in-memory.txt
+
 
 ## Data used in the Paper:
 
