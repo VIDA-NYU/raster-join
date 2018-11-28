@@ -1,7 +1,7 @@
 # README for the Raster Join Project
 
 ## Paper abstract
-Visual exploration of spatial data relies heavily on spatial aggregation queries that slice and summarize the data over different regions. These queries comprise computationally-intensive point-inpolygon tests that associate data points to polygonal regions, challenging the responsiveness of visualization tools. This challenge is compounded by the sheer amounts of data, requiring a large number of such tests to be performed. Traditional pre-aggregation approaches are unsuitable in this setting since they fix the query constraints and support only rectangular regions. On the other hand, query constraints are defined interactively in visual analytics systems, and polygons can be of arbitrary shapes. In this paper, we convert a spatial aggregation query into a set of drawing operations on a canvas and leverage the rendering pipeline of the graphics hardware (GPU) to enable interactive response times. Our technique trades-off accuracy for response time by adjusting the canvas resolution, and can even provide accurate results when combined with a polygon index. We evaluate our technique on two large real-world data sets, exhibiting superior performance compared to index-based approaches.
+Visual exploration of spatial data relies heavily on spatial aggregation queries that slice and summarize the data over different regions. These queries comprise computationally-intensive point-in-polygon tests that associate data points to polygonal regions, challenging the responsiveness of visualization tools. This challenge is compounded by the sheer amounts of data, requiring a large number of such tests to be performed. Traditional pre-aggregation approaches are unsuitable in this setting since they fix the query constraints and support only rectangular regions. On the other hand, query constraints are defined interactively in visual analytics systems, and polygons can be of arbitrary shapes. In this paper, we convert a spatial aggregation query into a set of drawing operations on a canvas and leverage the rendering pipeline of the graphics hardware (GPU) to enable interactive response times. Our technique trades-off accuracy for response time by adjusting the canvas resolution, and can even provide accurate results when combined with a polygon index. We evaluate our technique on two large real-world data sets, exhibiting superior performance compared to index-based approaches.
 
 **Link to the publication:** http://www.vldb.org/pvldb/vol11/p352-zacharatou.pdf 
 
@@ -36,7 +36,7 @@ The source code for the three GPU techniques.
 
 --accuracy: The epsilon-bound in meters. Optional argument. The default value is 100.
 
---joinType: Choose GPU technique. There are four options: raster, errorbounds, hybrid and index. Here, errorbounds corresponding to the raster approach which computes the aggregation range (see paragraph **Estimating the Result Range** of Section 5 in the paper. Currently implemented only for Count() aggregation).
+--joinType: Choose GPU technique. There are four options: raster, errorbounds, hybrid and index. Here, errorbounds corresponds to the raster approach which computes the aggregation range (see paragraph **Estimating the Result Range** of Section 5 in the paper. Currently implemented only for Count() aggregation).
 
 --backendIndexName: Prefix path to the backend index containing the data records. 
 
