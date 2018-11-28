@@ -5,7 +5,8 @@ param
 	[Parameter(Mandatory)]
 	[string]$DataFolder,
 	[Parameter(Mandatory)]
-	[string]$OutputFolder
+	[string]$OutputFolder,
+	[int]$GpuMem=3072
 )
 
 $exe = $ProgramDir + "\RasterJoin.exe"
@@ -20,7 +21,7 @@ if(!(Test-Path -Path $accFolder )){
 $bounds = 20, 10, 5, 3, 2, 1
 ForEach($bound in $bounds) {
 	$opFile = $accFolder + "\taxi-acc-ooc.txt"
-	$arguments = "--nIter", 6, "--opAggregation", "$accFolder", "--joinType", "raster", "--accuracy", $bound, "--backendIndexName", "$index", "--locAttrib", 1, "--polygonList", "$polyList", "--polygonDataset", "neigh", "--startTime", 1230768000, "--endTime", 1341128000, "--outputTime", "$opFile"
+	$arguments = "--nIter", 6, "--opAggregation", "$accFolder", "--joinType", "raster", "--accuracy", $bound, "--backendIndexName", "$index", "--locAttrib", 1, "--polygonList", "$polyList", "--polygonDataset", "neigh", "--startTime", 1230768000, "--endTime", 1341128000, "--outputTime", "$opFile", "--gpuMem", $GpuMem
 	Write-Host("executing $exe $arguments")
 	& "$exe" $arguments
 }

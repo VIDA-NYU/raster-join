@@ -309,7 +309,7 @@ void HybridJoin::renderPolys() {
     timer.restart();
 #endif
 
-    glDrawArrays(GL_TRIANGLES, 0, psize / 2);
+    glDrawArrays(GL_TRIANGLES, 0, psize / (2 * sizeof(float)));
     glDisableVertexAttribArray(0);
 
 #ifdef PROFILE_GL

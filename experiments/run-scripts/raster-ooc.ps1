@@ -5,7 +5,8 @@ param
 	[Parameter(Mandatory)]
 	[string]$DataFolder,
 	[Parameter(Mandatory)]
-	[string]$OutputFolder
+	[string]$OutputFolder,
+	[int]$GpuMem=3072
 )
 
 $exe = $ProgramDir + "\RasterJoin.exe"
@@ -20,7 +21,7 @@ if(!(Test-Path -Path $scalabilityFolder )){
 $oocTimes = 1388468000,1372668000,1356868000,1341128000,1325378000,1309608000
 ForEach($endTime in $oocTimes) {
 	$opFile = $scalabilityFolder + "\taxi-ooc.txt"
-	$arguments = "--nIter", 6, "--joinType", "raster", "--accuracy", 10, "--backendIndexName", "$index", "--locAttrib", 1, "--polygonList", "$polyList", "--polygonDataset", "neigh", "--startTime", 1230768000, "--endTime", $endTime, "--outputTime", "$opFile"
+	$arguments = "--nIter", 6, "--joinType", "raster", "--accuracy", 10, "--backendIndexName", "$index", "--locAttrib", 1, "--polygonList", "$polyList", "--polygonDataset", "neigh", "--startTime", 1230768000, "--endTime", $endTime, "--outputTime", "$opFile", "--gpuMem", $GpuMem
 	Write-Host("executing $exe $arguments")
 	& "$exe" $arguments
 }
