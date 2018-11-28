@@ -30,7 +30,7 @@ For that, you need to implement the interface named Record.hpp for your data set
 ### Raster Join
 The source code for the three GPU techniques. 
 
-**Usage:** RasterJoin [--nIter number_of_iterations] [--accuracy epsilon_bound_in_meters] --joinType [raster | hybrid | index] --backendIndexName prefix_path --polygonList  path_to_file --polygonDataset name_of_polygon_collection --locAttrib offset_of_the_location_attribute_in_the_record [--indexRes number_of_cells_per_dim] [--nAttrib number_of_filtered_attributes] --startTime start_time --endTime end_time [--inmem] [--opAggregation ] [--inputSize ] [--avg attribute] [--gpuMem size_in_megabytes] [--outputTime path_to_file]
+**Usage:** RasterJoin [--nIter number_of_iterations] [--accuracy epsilon_bound_in_meters] --joinType [raster | errorbounds | hybrid | index] --backendIndexName prefix_path --polygonList  path_to_file --polygonDataset name_of_polygon_collection --locAttrib offset_of_the_location_attribute_in_the_record [--indexRes number_of_cells_per_dim] [--nAttrib number_of_filtered_attributes] --startTime start_time --endTime end_time [--inmem] [--opAggregation ] [--inputSize ] [--avg attribute] [--gpuMem size_in_megabytes] [--outputTime path_to_file]
 
 --nIter: Define how many times the query should be executed (for performance measurements only). Optional argument. The default value is 1.
 
@@ -73,7 +73,7 @@ The above command executes the bounded raster join with an accuracy of 10 meters
 release/RasterJoin.exe --nIter 10 --joinType raster --backendIndexName [path to data folder]/taxi/taxi_full_index --polygonList [path to data folder]/polys/nyc_polys.txt --polygonDataset neigh --locAttrib 1 --nAttrib 2 --startTime 1230768000 --endTime 1272808000 --inmem 
 --outputTime [path to output folder]/scalability/taxi-mem-attrib.txt
 
-Here the join is performed 10 times, filtering constraints are applied and the results are saved in a text file. 
+Here the join is performed 10 times, filtering constraints are applied, and the results are saved in a text file. 
   
 release/RasterJoin.exe --nIter 4 --joinType hybrid --indexRes 1024 --backendIndexName [path to data folder]/taxi/taxi_full_index --locAttrib 1 --polygonList [path to data folder]/polys/nyc-polygons.txt --polygonDataset 16384 --startTime 1230768000 --endTime 1272808000
 
@@ -102,23 +102,23 @@ The source code for the CPU baseline (both single-core and parallel).
 
 --outputTime: Path to output file containing the performance results. Optional argument.
 
- **Example:** release/CPUJoin --nIter 6 --backendIndexName [path to data folder]/taxi/taxi_full_index --polygonList  [path to data folder]/polys/nyc_polys.txt --polygonDataset neigh --locAttrib 1 --indexRes 1024 --startTime 1230768000 --endTime 1272808000 
+ **Example:** release/CPUJoin.exe --nIter 6 --backendIndexName [path to data folder]/taxi/taxi_full_index --polygonList  [path to data folder]/polys/nyc_polys.txt --polygonDataset neigh --locAttrib 1 --indexRes 1024 --startTime 1230768000 --endTime 1272808000 
 
 ## Reproducing paper's experiments:
  The **experiments** directory provides all the required resources for reproducing the results presented in the paper.
  It consists of the following subdirectories:
  
- - **run-scripts**: This directory contains Windows powershell scripts that produce the experimental results that are presented in the paper. All scripts take the following three arguments: 1) the location of the executable, 2) the path to the data directory (which has the taxi and poly subdirectories), and, 3) the path to store the result files (the scripts will create two subdirectories, scalability and accuracy to store the respective files). The scripts that involve the GPU approaches take an additional fourth argument, 4) the GPU memory usage in Megabytes. This argument is optional and the default value is set to 3072 MB which corresponds to the configuration used in the paper.
+ - **run-scripts**: This directory contains Windows powershell scripts that produce the experimental results that are presented in the paper. All scripts take the following three arguments: 1) the location of the executable, 2) the path to the data directory (which has the taxi and polys subdirectories), and, 3) the path to store the result files (the scripts will create two subdirectories, scalability and accuracy to store the respective files). The scripts that involve the GPU approaches take an additional fourth argument, 4) the GPU memory usage in Megabytes. This argument is optional and the default value is set to 3072 MB which corresponds to the configuration used in the paper.
 
 The **executable** that the scripts take as input can be downloaded in the release section or compiled from the provided source code.
-The release contains a redistributable package for visual studio which only needs to be installed in case of missing DLLs.  
+Note that the release contains a redistributable package for visual studio which only needs to be installed in case of missing DLLs.  
 
 The following zip file (rasterjoin-data.zip) contains the data directory that should be given as input to the scripts.   
 **Link to download the data:** https://drive.google.com/open?id=1v8tSVX2ktovM9XWd95fZ7P6HWvD1mBCV
 
 The directory extracted from the above zip file contains two subdirectories: taxi and polys. The taxi subdirectory has the backend index built on 5 years of taxi data used in the paper. Note that the purpose of this index is to only provide the means of selecting data of varying input sizes for the experiments. The polys subdirectory has both the neighborhood polygons, as well as the synthetic polygons used in the experiments.
 
-- **results-paper**: This directory contains the result files that have the experimental numbers which are presented in the paper. The scalability subdirectory contains timing results, and the accuracy subdirectory contains results about the accuracy of the raster join approach. Note that when the results are generated using the provided poweshell scripts, the scripts take care of placing the result files in the corresponding subdirectory. 
+- **results-paper**: This directory contains the result files that store the experimental numbers which are presented in the paper. The 'scalability' subdirectory contains timing results, and the 'accuracy' subdirectory contains results about the accuracy of the raster join approach. Note that when the results are generated using the provided poweshell scripts, the scripts take care of placing the result files in the corresponding subdirectory. 
 
 - **plot-scripts**: This directory contains python scripts that generate the figures in the paper. More specifically, all the figures can be generated using the 'plot_script_main.py' script. This script takes as input 1) the path to the directory that stores the result files to be plotted, and, 2) the paper figure to be generated.
 
@@ -132,4 +132,4 @@ The generated figures are stored in the 'figures-paper' directory.
 
 This takes the required input from the 'results-paper' directory,  generates Figure 8 of the paper, and stores it in the 'figures-paper' directory. 
 
-- **figures-paper**: This directory contains all the figures (png files) in the paper that are generated using the python plot script (python plot-scripts/plot_script_main all) with the provided result files in the 'resuls-paper' directory as input.  
+- **figures-paper**: This directory contains all the figures (png files) in the paper that are generated using the python plot script with the provided result files in the 'resuls-paper' directory as input (python plot-scripts/plot_script_main all).  
