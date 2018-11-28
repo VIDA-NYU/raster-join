@@ -70,7 +70,7 @@ release/RasterJoin.exe --nIter 3 --joinType raster --accuracy 10 --backendIndexN
 
 The above command executes the bounded raster join with an accuracy of 10 meters. The join is performed 3 times.
 
-release/RasterJoin --nIter 10 --joinType raster --backendIndexName [path to data folder]/taxi/taxi_full_index --polygonList [path to data folder]/polys/nyc_polys.txt --polygonDataset neigh --locAttrib 1 --nAttrib 2 --startTime 1230768000 --endTime 1272808000 --inmem 
+release/RasterJoin.exe --nIter 10 --joinType raster --backendIndexName [path to data folder]/taxi/taxi_full_index --polygonList [path to data folder]/polys/nyc_polys.txt --polygonDataset neigh --locAttrib 1 --nAttrib 2 --startTime 1230768000 --endTime 1272808000 --inmem 
 --outputTime [path to output folder]/scalability/taxi-mem-attrib.txt
 
 Here the join is performed 10 times, filtering constraints are applied and the results are saved in a text file. 
@@ -108,9 +108,10 @@ The source code for the CPU baseline (both single-core and parallel).
  The **experiments** directory provides all the required resources for reproducing the results presented in the paper.
  It consists of the following subdirectories:
  
- - **run-scripts**: This directory contains Windows powershell scripts that produce the experimental results that are presented in the paper. All scripts take the following three arguments: 1) the location of the executable, 2) the path to the data directory (which has the taxi and poly subdirectories), and, 3) the path to store the result files. The scripts that involve the GPU approaches take an additional fourth argument, 4) the GPU memory usage in Megabytes. This argument is optional and the default value is set to 3072 MB which corresponds to the configuration used in the paper.
+ - **run-scripts**: This directory contains Windows powershell scripts that produce the experimental results that are presented in the paper. All scripts take the following three arguments: 1) the location of the executable, 2) the path to the data directory (which has the taxi and poly subdirectories), and, 3) the path to store the result files (the scripts will create two subdirectories, scalability and accuracy to store the respective files). The scripts that involve the GPU approaches take an additional fourth argument, 4) the GPU memory usage in Megabytes. This argument is optional and the default value is set to 3072 MB which corresponds to the configuration used in the paper.
 
 The **executable** that the scripts take as input can be downloaded in the release section or compiled from the provided source code.
+The release contains a redistributable package for visual studio which only needs to be installed in case of missing DLLs.  
 
 The following zip file (rasterjoin-data.zip) contains the data directory that should be given as input to the scripts.   
 **Link to download the data:** https://drive.google.com/open?id=1v8tSVX2ktovM9XWd95fZ7P6HWvD1mBCV
