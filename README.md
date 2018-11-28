@@ -64,8 +64,20 @@ The source code for the three GPU techniques.
 
 --outputTime: Path to output file containing the performance results. Optional argument.
 
-**Example:** ./RasterJoin --nIter 10 --joinType raster --backendIndexName <path to data folder>/taxi/taxi_full_index --polygonList <path to data folder>/polys/nyc_polys.txt --polygonDataset neigh --locAttrib 1 --indexRes 1024 --nAttrib 2 --startTime 1230768000 --endTime 1272808000 –inmem --outputTime <path to output folder>/scalability/taxi-in-memory.txt
+**Examples:** The following examples assume that the executable is in the release folder. 
+
+release/RasterJoin.exe --nIter 3 --joinType raster --accuracy 10 --backendIndexName <path to data folder>/taxi/taxi_full_index --locAttrib 1 --polygonList <path to data folder>/polys/nyc_polys.txt --polygonDataset neigh --startTime 1230768000 --endTime 1272808000
+
+The above command executes the bounded raster join with an accuracy of 10 meters. The join is performed 3 times.
+
+release/RasterJoin --nIter 10 --joinType raster --backendIndexName <path to data folder>/taxi/taxi_full_index --polygonList <path to data folder>/polys/nyc_polys.txt --polygonDataset neigh --locAttrib 1 --nAttrib 2 --startTime 1230768000 --endTime 1272808000 –inmem --outputTime <path to output folder>/scalability/taxi-in-memory.txt
   
+Here the join is performed 10 times and filtering constraints are applied.
+  
+release/RasterJoin.exe --nIter 4 --joinType hybrid --indexRes 1024 --backendIndexName <path to data folder>/taxi/taxi_full_index --locAttrib 1 --polygonList <path to data folder>/polys/nyc-polygons.txt --polygonDataset 16384 --startTime 1230768000 --endTime 1272808000
+
+This command runs the hybrid raster join using the synthetic polygon dataset having 16384 polygons. The resolution of the index created on the polygons is 1024. Replacing "hybrid" with "index" will execute the baseline index-based join.
+    
 ### CPU Join
 The source code for the CPU baseline (both single-core and parallel).
 
@@ -89,20 +101,25 @@ The source code for the CPU baseline (both single-core and parallel).
 
 --outputTime: Path to output file containing the performance results. Optional argument.
 
- **Example:** ./CPUJoin --nIter 6 --backendIndexName <path to data folder>/taxi/taxi_full_index --polygonList  <path to data folder>/polys/nyc_polys.txt --polygonDataset neigh --locAttrib 1 --indexRes 1024 --startTime 1230768000 --endTime 1272808000 --outputTime <path to output folder>/scalability/taxi-in-memory.txt
+ **Example:** release/CPUJoin --nIter 6 --backendIndexName <path to data folder>/taxi/taxi_full_index --polygonList  <path to data folder>/polys/nyc_polys.txt --polygonDataset neigh --locAttrib 1 --indexRes 1024 --startTime 1230768000 --endTime 1272808000 --outputTime <path to output folder>/scalability/taxi-in-memory.txt
 
 ## Reproducing paper's experiments:
  The **experiments** directory provides all the required resources for reproducing the results presented in the paper.
  It consists of the following subdirectories:
  
- - **run-scripts**: There is one Windows powershell script for each experiment. The script takes 3 arguments: 1) the location of the executable, 2) the path to the data directory (which has the taxi and poly subdirectories), and, 3) the path to store the result files.
+ - **run-scripts**: This directory contains Windows powershell scripts that produce the experimental results that are presented in the paper. All scripts take the following three arguments: 1) the location of the executable, 2) the path to the data directory (which has the taxi and poly subdirectories), and, 3) the path to store the result files. The scripts that involve the GPU approaches take an additional fourth argument, 4) the GPU memory usage in Megabytes. This argument is optional and the default value is set to 3072 MB which corresponds to the configuration used in the paper.
 
-The executable can be downloaded in the release section or compiled from the provided source code.
+The **executable** that the scripts take as input can be downloaded in the release section or compiled from the provided source code.
 
-**Data used in the paper:**
+The following zip file contains the data directory that should be given as input to the scripts.   
+**Link to download the data:** https://drive.google.com/open?id=1v8tSVX2ktovM9XWd95fZ7P6HWvD1mBCV
 
-The following shared folder contains the required data for reproducing the results involving the NYC Taxi data and the neighborhood polygons: https://drive.google.com/open?id=1ht2cU21UL2vf1LnwZgdemWGitEBKvzXZ
+The directory extracted from the above zip file (rasterjoin-data.zip) has the required data for reproducing the results involving the NYC Taxi data and contains two subdirectories: taxi and polys. The taxi subdirectory has the backend index built on 5 years of taxi data used in the paper. Note that the purpose of this index is to only provide the means of selecting data of varying input sizes for the experiments. The polys subdirectory has both the neighborhood polygons, as well as the synthetic polygons used in the experiments.
 
-The **readme.txt** file in the above shared folder has instructions on using the provided files.
+
+
+
+
+
 
 
