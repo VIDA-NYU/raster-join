@@ -159,12 +159,13 @@ if __name__=="__main__":
 
     if len(sys.argv) == 3:
         result_folder = str(sys.argv[1])
-        exp = sys.argv[2]
+        exp = " ".join(sys.argv[2:]) 
     else:
         result_folder  = "../results-paper"
-        exp = sys.argv[1]
-        
-    if exp =="figure_8" or "all": 
+        exp = " ".join(sys.argv[1:]) 
+
+
+    if exp == "figure_8" or exp == "all": 
         #Parse results
         results = readResults(result_folder+"/scalability/taxi-in-memory.txt")
         #Separate different approaches
@@ -200,7 +201,7 @@ if __name__=="__main__":
             'figure_8_2'
             )
     
-    if exp =="figure_9" or "all": 
+    if exp == "figure_9" or exp == "all": 
         # Parse results
         results = readResults(result_folder+"/scalability/taxi-ooc.txt")
         # Separate different approaches
@@ -240,7 +241,7 @@ if __name__=="__main__":
             )
 
     
-    if exp == "figure_10" or "all":
+    if exp == "figure_10" or exp == "all":
         #Parse results
         results = readResults(result_folder+"/scalability/taxi-ooc-polygons.txt")
         #Separate different approaches
@@ -309,7 +310,7 @@ if __name__=="__main__":
             'figure_10_1'
             )
 
-    if exp == "figure_11" or "all":
+    if exp == "figure_11" or exp == "all":
 
         # Parse results
         results = readResults(result_folder+"/scalability/taxi-mem-attrib.txt")
@@ -355,7 +356,7 @@ if __name__=="__main__":
             ) 
 
 
-    if exp == "figure_12" or "all":
+    if exp == "figure_12" or exp == "all":
 
         # Parse results
         results = readResults(result_folder+"/accuracy/taxi-acc-ooc.txt")
@@ -403,7 +404,7 @@ if __name__=="__main__":
         box_plot(filtered_errors[::-1], ['1', '2', '3', '5', '10', '20'], "../figures-paper/12_2.png", "nothing")
 
 
-    if exp == "figure_13" or "all": 
+    if exp == "figure_13" or exp == "all": 
         #Parse results
         results = readResults(result_folder+"/scalability/twitter-cpu-ooc.txt")
         #Separate different approaches
@@ -435,7 +436,7 @@ if __name__=="__main__":
             'figure_13_2'
             )
     
-    if exp == "figure_14" or "all":
+    if exp == "figure_14" or exp == "all":
         results = readResults(result_folder+"/accuracy/twitter-acc.txt")
 
         # Separate different approaches

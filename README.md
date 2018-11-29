@@ -127,7 +127,7 @@ The directory extracted from the above zip file contains two subdirectories: tax
 
 The generated figures are stored in the 'figures-paper' directory.  
 
-*Example usage*: python plot_script_main figure_8
+*Example usage*: python plot_script_main.py figure_8
 
 
 This takes the required input from the 'results-paper' directory,  generates Figure 8 of the paper, and stores it in the 'figures-paper' directory. 
