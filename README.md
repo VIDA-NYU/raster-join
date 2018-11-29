@@ -118,18 +118,18 @@ The following zip file (rasterjoin-data.zip) contains the data directory that sh
 
 The directory extracted from the above zip file contains two subdirectories: taxi and polys. The taxi subdirectory has the backend index built on 5 years of taxi data used in the paper. Note that the purpose of this index is to only provide the means of selecting data of varying input sizes for the experiments. The polys subdirectory has both the neighborhood polygons, as well as the synthetic polygons used in the experiments.
 
-- **results-paper**: This directory contains the result files that store the experimental numbers which are presented in the paper. The 'scalability' subdirectory contains timing results, and the 'accuracy' subdirectory contains results about the accuracy of the raster join approach. Note that when the results are generated using the provided poweshell scripts, the scripts take care of placing the result files in the corresponding subdirectory. 
+- **results-paper**: This directory contains result files with the experimental numbers which are presented in the paper. The 'scalability' subdirectory contains timing results, and the 'accuracy' subdirectory contains results about the accuracy of the raster join approach. Note that when the results are generated using the provided poweshell scripts, the scripts take care of placing the result files in the corresponding subdirectory. 
 
 - **plot-scripts**: This directory contains python scripts that generate the figures in the paper. More specifically, all the figures can be generated using the 'plot_script_main.py' script. This script takes as input 1) the path to the directory that stores the result files to be plotted, and, 2) the paper figure to be generated.
 
 1) the path to the result directory is optional. By default the results are retrieved from the 'results-paper' directory.
-2) this argument is of the form 'figure_[8-14]', where the number corresponds to the figure number in the paper. The option 'all' generates all the figures in the paper. 
+2) this argument is of the form 'figure_[8-14]'|'all', where the number corresponds to the figure number in the paper and the option 'all' generates all the figures in the paper. 
 
 The generated figures are stored in the 'figures-paper' directory.  
 
-*Example usage*: python plot_script_main.py figure_8
+*Example usage*: python plot-scripts/plot_script_main.py figure_8
 
 
 This takes the required input from the 'results-paper' directory,  generates Figure 8 of the paper, and stores it in the 'figures-paper' directory. 
 
-- **figures-paper**: This directory contains all the figures (png files) in the paper that are generated using the python plot script with the provided result files in the 'resuls-paper' directory as input (python plot-scripts/plot_script_main all).  
+- **figures-paper**: This directory contains all the figures (png files) in the paper that are generated using the python plot script with the provided result files in the 'resuls-paper' directory as input (python plot-scripts/plot_script_main.py all).  
