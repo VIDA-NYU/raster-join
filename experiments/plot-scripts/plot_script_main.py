@@ -173,33 +173,39 @@ if __name__=="__main__":
         #Speedup 
         t =  get_processing_time(a[3])[1:] #choosing 1024 resolution
 
-        line_plot( 
-            [get_speedup(t, get_processing_time(a[0])[1:]), get_speedup(t,
-             get_processing_time(a[2])[1:]), get_speedup(t,
-             get_processing_time(a[1])[1:]), get_speedup(t,
-             get_processing_time(a[4])[1:])],
-             get_input_size_millions(a[0])[1:],
-            ['Bounded', 'Accurate', 'Baseline', 'Multi-CPU'],
-            ['Input Size (millions of records)',
-             'Speedup over single-core CPU'],
-            ['maroon', 'grey', 'black', 'blue'],
-            True,  # save the figure?
-            '../figures-paper/8_1.png',
-            'figure_8_1'
-            )
+        measurements_list = [get_input_size_millions(a[0]), get_input_size_millions(a[2]), get_input_size_millions(a[1]), get_input_size_millions(a[4])]
+        n = len(measurements_list[0])
+        if all(len(x) == n for x in measurements_list):
 
-        # Time plot
-        line_plot(  
-            [get_processing_time(a[0])[1:], get_processing_time(a[2])[1:],
-             get_processing_time(a[1])[1:]],
-            get_input_size_millions(a[0])[1:],
-            ['Bounded', 'Accurate', 'Baseline'],
-            ['Input Size (millions of records)', 'Time (sec)'],
-            ['maroon', 'grey', 'black'],
-            True, # save the figure?
-            '../figures-paper/8_2.png',
-            'figure_8_2'
-            )
+            line_plot( 
+                [get_speedup(t, get_processing_time(a[0])[1:]), get_speedup(t,
+                get_processing_time(a[2])[1:]), get_speedup(t,
+                get_processing_time(a[1])[1:]), get_speedup(t,
+                get_processing_time(a[4])[1:])],
+                get_input_size_millions(a[0])[1:],
+                ['Bounded', 'Accurate', 'Baseline', 'Multi-CPU'],
+                ['Input Size (millions of records)',
+                'Speedup over single-core CPU'],
+                ['maroon', 'grey', 'black', 'blue'],
+                True,  # save the figure?
+                '../figures-paper/8_1.png',
+                'figure_8_1'
+                )
+
+            # Time plot
+            line_plot(  
+                [get_processing_time(a[0])[1:], get_processing_time(a[2])[1:],
+                get_processing_time(a[1])[1:]],
+                get_input_size_millions(a[0])[1:],
+                ['Bounded', 'Accurate', 'Baseline'],
+                ['Input Size (millions of records)', 'Time (sec)'],
+                ['maroon', 'grey', 'black'],
+                True, # save the figure?
+                '../figures-paper/8_2.png',
+                'figure_8_2'
+                )
+        else:
+            print "Error in Figure 8 generation, the input file contains too many or too few measurements!"
     
     if exp == "figure_9" or exp == "all": 
         # Parse results
@@ -209,36 +215,42 @@ if __name__=="__main__":
         # Speedup         
         t = get_total_time(a[3]) #choosing 1024 resolution
 
-        line_plot(  
-            [get_speedup(t, get_total_time(a[0])), get_speedup(t,
-             get_total_time(a[2])), get_speedup(t,
-             get_total_time(a[1])), get_speedup(t,
-             get_total_time(a[4]))],
-            get_input_size_millions(a[0]),
-            ['Bounded', 'Accurate', 'Baseline', 'Multi-CPU'],
-            ['Input Size (millions of records)',
-             'Speedup over single-core CPU'],
-            ['maroon', 'grey', 'black', 'blue'],
-            True, # save the figure?
-            '../figures-paper/9_1.png',
-            'figure_9_1'
-            )
+        measurements_list = [get_input_size_millions(a[0]), get_input_size_millions(a[2]), get_input_size_millions(a[1]), get_input_size_millions(a[4])]
+        n = len(measurements_list[0])
+        if all(len(x) == n for x in measurements_list):
 
-        # Split up
-        bar_plot(  
-            [[get_point_memory_time(a[0]), get_processing_time(a[0])],
-             [get_point_memory_time(a[2]), get_processing_time(a[2])],
-             [get_point_memory_time(a[1]), get_processing_time(a[1])]],
-            get_input_size_millions(a[0]),
-            [['Bounded (data transfer)', 'Bounded (processing)'],
-             ['Accurate (data transfer)', 'Accurate (processing)'],
-             ['Baseline (data transfer)', 'Baseline (processing)']],
-            ['Input Size (millions of records)', 'Time (sec)'],
-            ['maroon', 'grey', 'black'],
-            False, # legend?
-            '../figures-paper/9_2.png',
-            True #stacked?
-            )
+            line_plot(  
+                [get_speedup(t, get_total_time(a[0])), get_speedup(t,
+                get_total_time(a[2])), get_speedup(t,
+                get_total_time(a[1])), get_speedup(t,
+                get_total_time(a[4]))],
+                get_input_size_millions(a[0]),
+                ['Bounded', 'Accurate', 'Baseline', 'Multi-CPU'],
+                ['Input Size (millions of records)',
+                'Speedup over single-core CPU'],
+                ['maroon', 'grey', 'black', 'blue'],
+                True, # save the figure?
+                '../figures-paper/9_1.png',
+                'figure_9_1'
+                )
+
+            # Split up
+            bar_plot(  
+                [[get_point_memory_time(a[0]), get_processing_time(a[0])],
+                [get_point_memory_time(a[2]), get_processing_time(a[2])],
+                [get_point_memory_time(a[1]), get_processing_time(a[1])]],
+                get_input_size_millions(a[0]),
+                [['Bounded (data transfer)', 'Bounded (processing)'],
+                ['Accurate (data transfer)', 'Accurate (processing)'],
+                ['Baseline (data transfer)', 'Baseline (processing)']],
+                ['Input Size (millions of records)', 'Time (sec)'],
+                ['maroon', 'grey', 'black'],
+                False, # legend?
+                '../figures-paper/9_2.png',
+                True #stacked?
+                )
+        else:
+            print "Error in Figure 9 generation, the input file contains too many or too few measurements!"
 
     
     if exp == "figure_10" or exp == "all":
@@ -246,69 +258,75 @@ if __name__=="__main__":
         results = readResults(result_folder+"/scalability/taxi-ooc-polygons.txt")
         #Separate different approaches
         a = get_approaches(results)
+
+        measurements_list = [get_number_of_polygons(a[0]), get_number_of_polygons(a[2]), get_number_of_polygons(a[1]), get_number_of_polygons(a[4])]
+        n = len(measurements_list[0])
+        if all(len(x) == n for x in measurements_list):
         
-        # Removing some values
-        indices = 0,1,2,3
-        processing_bounded = drop_indices(get_processing_time(a[0])[::-1], indices)
-        processing_render = drop_indices(get_processing_time(a[1])[::-1], indices)
-        processing_Accurate = drop_indices(get_processing_time(a[2])[::-1], indices)
-        number_of_polygons = drop_indices(get_number_of_polygons(a[0]), indices)
+            # Removing some values
+            indices = 0,1,2,3
+            processing_bounded = drop_indices(get_processing_time(a[0])[::-1], indices)
+            processing_render = drop_indices(get_processing_time(a[1])[::-1], indices)
+            processing_Accurate = drop_indices(get_processing_time(a[2])[::-1], indices)
+            number_of_polygons = drop_indices(get_number_of_polygons(a[0]), indices)
 
-        # Processing time plot 
-        line_plot(  
-            [processing_bounded,
-             processing_Accurate,
-             processing_render],
-            number_of_polygons,
-            ['Bounded', 'Accurate', 'Baseline'],
-            ['Number of polygons (in thousands)', 'Time (sec)'],
-            ['maroon', 'grey', 'black'],
-            True, # save the figure?
-            '../figures-paper/10_3.png',
-            'figure_10_3'
-            )  
+            # Processing time plot 
+            line_plot(  
+                [processing_bounded,
+                processing_Accurate,
+                processing_render],
+                number_of_polygons,
+                ['Bounded', 'Accurate', 'Baseline'],
+                ['Number of polygons (in thousands)', 'Time (sec)'],
+                ['maroon', 'grey', 'black'],
+                True, # save the figure?
+                '../figures-paper/10_3.png',
+                'figure_10_3'
+                )  
 
-        total_bounded = drop_indices(get_total_time(a[0])[::-1], indices)
-        total_render = drop_indices(get_total_time(a[1])[::-1], indices)
-        total_Accurate = drop_indices(get_total_time(a[2])[::-1], indices)
-        total_multicpu = drop_indices(get_total_time(a[4])[::-1], indices)
+            total_bounded = drop_indices(get_total_time(a[0])[::-1], indices)
+            total_render = drop_indices(get_total_time(a[1])[::-1], indices)
+            total_Accurate = drop_indices(get_total_time(a[2])[::-1], indices)
+            total_multicpu = drop_indices(get_total_time(a[4])[::-1], indices)
 
 
-        # Total time plot 
-        line_plot(  
-            [total_bounded,
-             total_Accurate,
-             total_render,
-             total_multicpu],
-            number_of_polygons,
-            ['Bounded', 'Accurate', 'Baseline', 'Multi-CPU'],
-            ['Number of polygons (in thousands)', 'Time (sec) - logscale'],
-            ['maroon', 'grey', 'black', 'blue'],
-            True, # save the figure?
-            '../figures-paper/10_2.png',
-            'figure_10_2'
-            )  
+            # Total time plot 
+            line_plot(  
+                [total_bounded,
+                total_Accurate,
+                total_render,
+                total_multicpu],
+                number_of_polygons,
+                ['Bounded', 'Accurate', 'Baseline', 'Multi-CPU'],
+                ['Number of polygons (in thousands)', 'Time (sec) - logscale'],
+                ['maroon', 'grey', 'black', 'blue'],
+                True, # save the figure?
+                '../figures-paper/10_2.png',
+                'figure_10_2'
+                )  
             
-        bounded_preprocess = drop_indices(get_pre_processing_time(a[0], oneK)[::-1], indices)
-        render_preprocess = drop_indices(get_pre_processing_time(a[1], oneK)[::-1], indices)
-        Accurate_preprocess = drop_indices(get_pre_processing_time(a[2], oneK)[::-1], indices)
-        multicpu_preprocess = drop_indices(get_pre_processing_time(a[4], oneK)[::-1], indices)
+            bounded_preprocess = drop_indices(get_pre_processing_time(a[0], oneK)[::-1], indices)
+            render_preprocess = drop_indices(get_pre_processing_time(a[1], oneK)[::-1], indices)
+            Accurate_preprocess = drop_indices(get_pre_processing_time(a[2], oneK)[::-1], indices)
+            multicpu_preprocess = drop_indices(get_pre_processing_time(a[4], oneK)[::-1], indices)
         
+            # Pre-processing time plot 
+            line_plot(  
+                [bounded_preprocess,
+                Accurate_preprocess,
+                render_preprocess,
+                multicpu_preprocess],
+                number_of_polygons,
+                ['Bounded', 'Accurate', 'Baseline', 'Multi-CPU'],
+                ['Number of polygons (in thousands)', 'Time (sec) - logscale'],
+                ['maroon', 'grey', 'black', 'blue'],
+                True, # save the figure?
+                '../figures-paper/10_1.png',
+                'figure_10_1'
+                )
 
-        # Pre-processing time plot 
-        line_plot(  
-            [bounded_preprocess,
-             Accurate_preprocess,
-             render_preprocess,
-             multicpu_preprocess],
-            number_of_polygons,
-            ['Bounded', 'Accurate', 'Baseline', 'Multi-CPU'],
-            ['Number of polygons (in thousands)', 'Time (sec) - logscale'],
-            ['maroon', 'grey', 'black', 'blue'],
-            True, # save the figure?
-            '../figures-paper/10_1.png',
-            'figure_10_1'
-            )
+        else:
+            print "Error in Figure 10 generation, the input file contains too many or too few measurements!"
 
     if exp == "figure_11" or exp == "all":
 
@@ -404,7 +422,8 @@ if __name__=="__main__":
         box_plot(filtered_errors[::-1], ['1', '2', '3', '5', '10', '20'], "../figures-paper/12_2.png", "nothing")
 
 
-    if exp == "figure_13" or exp == "all": 
+    if exp == "figure_13" or exp == "all" and os.path.isfile(result_folder+"/scalability/twitter-cpu-ooc.txt"): 
+
         #Parse results
         results = readResults(result_folder+"/scalability/twitter-cpu-ooc.txt")
         #Separate different approaches
@@ -436,7 +455,7 @@ if __name__=="__main__":
             'figure_13_2'
             )
     
-    if exp == "figure_14" or exp == "all":
+    if exp == "figure_14" or exp == "all" and os.path.isfile(result_folder+"/accuracy/twitter-acc.txt"):
         results = readResults(result_folder+"/accuracy/twitter-acc.txt")
 
         # Separate different approaches
