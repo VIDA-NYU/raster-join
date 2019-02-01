@@ -261,14 +261,36 @@ if __name__=="__main__":
 
         measurements_list = [get_number_of_polygons(a[0]), get_number_of_polygons(a[2]), get_number_of_polygons(a[1]), get_number_of_polygons(a[4])]
         n = len(measurements_list[0])
+        
+        indices = [0,1,2,3]
+        if not all(len(x) == n for x in measurements_list):
+            indices_render = [0,1,2,3,8]
+            indices_multicpu = [0,1,2,3,8]
+        else:
+            indices_render = indices
+            indices_multicpu = indices
+
+        # Removing some values
+        processing_bounded = drop_indices(get_processing_time(a[0])[::-1], indices)
+        processing_render = drop_indices(get_processing_time(a[1])[::-1], indices_render)
+        processing_Accurate = drop_indices(get_processing_time(a[2])[::-1], indices)
+        number_of_polygons = drop_indices(get_number_of_polygons(a[0]), indices)
+
+        total_bounded = drop_indices(get_total_time(a[0])[::-1], indices)
+        total_render = drop_indices(get_total_time(a[1])[::-1], indices_render)
+        total_Accurate = drop_indices(get_total_time(a[2])[::-1], indices)
+        total_multicpu = drop_indices(get_total_time(a[4])[::-1], indices_multicpu)
+
+        bounded_preprocess = drop_indices(get_pre_processing_time(a[0], oneK)[::-1], indices)
+        render_preprocess = drop_indices(get_pre_processing_time(a[1], oneK)[::-1], indices_render)
+        Accurate_preprocess = drop_indices(get_pre_processing_time(a[2], oneK)[::-1], indices)
+        multicpu_preprocess = drop_indices(get_pre_processing_time(a[4], oneK)[::-1], indices_multicpu)
+
+        measurements_list = [number_of_polygons, total_bounded, total_render, total_Accurate, total_multicpu]
+        n = len(measurements_list[0])
+
         if all(len(x) == n for x in measurements_list):
         
-            # Removing some values
-            indices = 0,1,2,3
-            processing_bounded = drop_indices(get_processing_time(a[0])[::-1], indices)
-            processing_render = drop_indices(get_processing_time(a[1])[::-1], indices)
-            processing_Accurate = drop_indices(get_processing_time(a[2])[::-1], indices)
-            number_of_polygons = drop_indices(get_number_of_polygons(a[0]), indices)
 
             # Processing time plot 
             line_plot(  
@@ -283,11 +305,6 @@ if __name__=="__main__":
                 '../figures-paper/10_3.png',
                 'figure_10_3'
                 )  
-
-            total_bounded = drop_indices(get_total_time(a[0])[::-1], indices)
-            total_render = drop_indices(get_total_time(a[1])[::-1], indices)
-            total_Accurate = drop_indices(get_total_time(a[2])[::-1], indices)
-            total_multicpu = drop_indices(get_total_time(a[4])[::-1], indices)
 
 
             # Total time plot 
@@ -305,10 +322,6 @@ if __name__=="__main__":
                 'figure_10_2'
                 )  
             
-            bounded_preprocess = drop_indices(get_pre_processing_time(a[0], oneK)[::-1], indices)
-            render_preprocess = drop_indices(get_pre_processing_time(a[1], oneK)[::-1], indices)
-            Accurate_preprocess = drop_indices(get_pre_processing_time(a[2], oneK)[::-1], indices)
-            multicpu_preprocess = drop_indices(get_pre_processing_time(a[4], oneK)[::-1], indices)
         
             # Pre-processing time plot 
             line_plot(  
