@@ -123,6 +123,7 @@ win32-g++{
     } else {
         QMAKE_CXXFLAGS += -O3
     }
+    CONFIG += console
     QMAKE_CXXFLAGS += -fopenmp
     QMAKE_LFLAGS   += -fopenmp
 

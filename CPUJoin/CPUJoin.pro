@@ -68,6 +68,11 @@ INCLUDEPATH += ../RasterJoin/common/
 INCLUDEPATH += ../RasterJoin/db/
 INCLUDEPATH += ../RasterJoin/triangulation/
 
+CONFIG(debug, debug|release) {
+} else {
+    DEFINES += "QT_NO_DEBUG_OUTPUT"
+}
+
 unix:!macx{
     CONFIG(debug, debug|release) {
     } else {
@@ -90,6 +95,7 @@ win32-g++{
     } else {
         QMAKE_CXXFLAGS += -O3
     }
+    CONFIG += console
     QMAKE_CXXFLAGS += -fopenmp
     QMAKE_LFLAGS   += -fopenmp
 
