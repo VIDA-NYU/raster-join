@@ -41,7 +41,7 @@ int       ComputeOutCode(double x, double y, QPointF leftBottom, QPointF rightTo
 //
 QPolygonF parsePolygonFile(QString filename);
 QPolygonF parsePolygonFileWithResolution(QString filename, double &groundRes);
-void readPolygons(QString polyFile, PolygonCollection &polys, QPointF &leftBottom, QPointF &rightTop);
+void readPolygons(QString polyFile, PolygonCollection &polys, QVector<int> polyIds, QPointF &leftBottom, QPointF &rightTop);
 
 double getRandomNumber();
 

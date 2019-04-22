@@ -42,11 +42,12 @@ void PolyHandler::initFromFile(QString polyIndex) {
 void PolyHandler::addPolygonCollection(QString collectionName, QString polyFile) {
     PolygonCollection collection;
     Bound collectionBounds;
-    readPolygons(polyFile, collection, collectionBounds.leftBottom, collectionBounds.rightTop);
-    this->addPolygonCollection(collectionName,collection,collectionBounds);
+    QVector<int> polyIds;
+    readPolygons(polyFile, collection, polyIds, collectionBounds.leftBottom, collectionBounds.rightTop);
+    this->addPolygonCollection(collectionName,collection,polyIds,collectionBounds);
 }
 
-void PolyHandler::addPolygonCollection(QString collectionName, const PolygonCollection &polys, const Bound &collectionBound) {
+void PolyHandler::addPolygonCollection(QString collectionName, const PolygonCollection &polys, QVector<int> polyIds, const Bound &collectionBound) {
     if(polyDb.contains(collectionName)) {
         qDebug() << "Collection with name" << collectionName << "already exists!";
         qDebug() << "Not adding to DB.";
@@ -60,14 +61,17 @@ void PolyHandler::addPolygonCollection(QString collectionName, const PolygonColl
     QVector<int> pindex;
     QVector<float> outlineIds;
     QVector<float> edgeIds;
+    QSet<int> pct;
     for(int i = 0;i < polys.size();i ++) {
         pindex << polyVerts.size() / 2;
+        int pid = (polyIds.size() == 0)?i:polyIds[i];
+        pct << pid;
         for(size_t j = 0;j < polys[i].size();j ++) {
             polyVerts << polys[i][j].x << polys[i][j].y;
 
             outline << polys[i][j].x << polys[i][j].y;
             outline << polys[i][(j + 1) % polys[i].size()].x << polys[i][(j + 1) % polys[i].size()].y;
-            outlineIds << i << i;
+            outlineIds << pid << pid;
             edgeIds << j << j;
         }
     }
@@ -77,9 +81,10 @@ void PolyHandler::addPolygonCollection(QString collectionName, const PolygonColl
     this->outlines.insert(collectionName,outline);
     this->oids.insert(collectionName,outlineIds);
     this->eids.insert(collectionName,edgeIds);
+    this->polyCt.insert(collectionName,pct.size());
 
     std::vector<float> verts, ids;
-    this->triangulate(polys,verts,ids);
+    this->triangulate(polys,polyIds,verts,ids);
     this->triverts.insert(collectionName, verts);
     this->triids.insert(collectionName, ids);
 }
@@ -91,7 +96,7 @@ void PolyHandler::getTriangulation(std::vector<float> &verts, std::vector<float>
 //    this->triangulate(polys,verts,ids);
 }
 
-void PolyHandler::triangulate(const PolygonCollection &polys, std::vector<float> &verts, std::vector<float> &ids) {
+void PolyHandler::triangulate(const PolygonCollection &polys, QVector<int> polyIds, std::vector<float> &verts, std::vector<float> &ids) {
     verts.clear();
     ids.clear();
 
@@ -109,13 +114,13 @@ void PolyHandler::triangulate(const PolygonCollection &polys, std::vector<float>
         clip2tri clip2tri;
         clip2tri.triangulate(inputPolygons, outputTriangles, boundingPolygon);
 
-
+        int pid = (polyIds.size() == 0)?i: polyIds[i];
         for(size_t j = 0;j < outputTriangles.size();j ++) {
             double x = double(outputTriangles[j].x);
             double y = double(outputTriangles[j].y);
             tverts[id].push_back(x);
             tverts[id].push_back(y);
-            tids[id].push_back(i);
+            tids[id].push_back(pid);
         }
     }
 
@@ -138,7 +143,7 @@ Bound PolyHandler::getBounds() {
 }
 
 int PolyHandler::getNoPolys() {
-    return this->polyDb[currentCollection].size();
+    return this->polyCt[currentCollection];
 }
 
 

@@ -12,9 +12,9 @@ SpatialAggregation::SpatialAggregation(int64_t gpuMemInMB) {
     handler->setDataHandler(dataHandler);
 }
 
-void SpatialAggregation::setInput(QVector<NPArray> pointColumns, QVector<NPArray> polygons) {
+void SpatialAggregation::setInput(QVector<NPArray> pointColumns, QVector<NPArray> polygons, QVector<int> polyIds) {
     this->dataHandler->setPointsData(pointColumns, 0);
-    this->dataHandler->setPolygonData(polygons);
+    this->dataHandler->setPolygonData(polygons, polyIds);
 }
 
 NPArray SpatialAggregation::rasterJoin(double accuracy, Aggregation aggType) {

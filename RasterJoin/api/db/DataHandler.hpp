@@ -21,7 +21,7 @@ public:
     ~DataHandler();
 
     void setPointsData(QVector<NPArray> pointColumns, size_t locAtt);
-    void setPolygonData(QVector<NPArray> polygons);
+    void setPolygonData(QVector<NPArray> polygons, QVector<int> polyIds);
 
     void setQueryConstraints(std::vector<QueryConstraint> constraints);
     PointData* getPoints();

@@ -368,7 +368,7 @@ QPolygonF parsePolygonFileWithResolution(QString filename, double &groundRes){
     return polygon;
 }
 
-void readPolygons(QString polyFile, PolygonCollection &polys, QPointF &leftBottom, QPointF &rightTop) {
+void readPolygons(QString polyFile, PolygonCollection &polys, QVector<int> polyIds, QPointF &leftBottom, QPointF &rightTop) {
     QFile fi(polyFile);
     if(!fi.open( QIODevice::ReadOnly | QIODevice::Text )) {
         qDebug() << "Could not open file" << polyFile;
@@ -382,10 +382,11 @@ void readPolygons(QString polyFile, PolygonCollection &polys, QPointF &leftBotto
     BoundF bound;
     for(int i = 0;i < tot;i ++) {
         input >> np;
-        PolygonF poly;
-        PointF prev;
-        TPolygon tpoly;
         for(int j = 0;j < np;j ++) {
+            PolygonF poly;
+            PointF prev;
+            TPolygon tpoly;
+            polyIds << i;
             input >> n;
             for(int k = 0;k < n;k ++) {
                 double x,y;
@@ -403,12 +404,12 @@ void readPolygons(QString polyFile, PolygonCollection &polys, QPointF &leftBotto
                 bound.updateBound(x,y);
                 prev = pt;
             }
+            if(poly.first() == poly.last()) {
+                poly.removeLast();
+                tpoly.pop_back();
+            }
+            polys.push_back(tpoly);
         }
-        if(poly.first() == poly.last()) {
-            poly.removeLast();
-            tpoly.pop_back();
-        }
-        polys.push_back(tpoly);
     }
     fi.close();
     leftBottom.setX(bound.minx);

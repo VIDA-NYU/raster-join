@@ -26,7 +26,6 @@ void DataHandler::setPointsData(QVector<NPArray> pointColumns, size_t locAtt) {
                 exit(1);
             }
             column.type = AttributeType::Location;
-            column.size = pointColumns[i].size / 2;
         } else {
             switch (pointColumns[i].type) {
             case NP_Float:
@@ -46,14 +45,14 @@ void DataHandler::setPointsData(QVector<NPArray> pointColumns, size_t locAtt) {
                 exit(1);
                 break;
             }
-            column.size = pointColumns[i].size;
         }
+        column.size = pointColumns[i].size * sizeof(float);
         column.data = pointColumns[i].data;
         points.columns.push_back(column);
     }
 }
 
-void DataHandler::setPolygonData(QVector<NPArray> polygons) {
+void DataHandler::setPolygonData(QVector<NPArray> polygons, QVector<int> polyIds) {
     polyHandler.currentCollection = DefaultCollectionName;
     PolygonCollection polys;
     Bound bound;
@@ -86,7 +85,7 @@ void DataHandler::setPolygonData(QVector<NPArray> polygons) {
     bound.rightTop.setX(maxx);
     bound.rightTop.setY(maxy);
 
-    polyHandler.addPolygonCollection(DefaultCollectionName,polys,bound);
+    polyHandler.addPolygonCollection(DefaultCollectionName,polys,polyIds,bound);
 }
 
 void DataHandler::setQueryConstraints(vector<QueryConstraint> constraints) {

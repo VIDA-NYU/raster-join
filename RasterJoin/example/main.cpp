@@ -7,7 +7,7 @@
 #include <interface/SpatialAggregation.hpp>
 
 
-QVector<NPArray> readPoints(QString fileName, boolean valuePresent = false) {
+QVector<NPArray> readPoints(QString fileName, bool valuePresent = false) {
     qDebug() << "reading" << fileName;
     QVector<NPArray> pts;
     QFile fi(fileName);
@@ -22,8 +22,8 @@ QVector<NPArray> readPoints(QString fileName, boolean valuePresent = false) {
     std::vector<float> coords, vals;
     while(!ip.atEnd()) {
         QStringList line = ip.readLine().split(",");
-        float x = line[0].toFloat();
-        float y = line[1].toFloat();
+        float x = line[0].toFloat() * 100000;
+        float y = line[1].toFloat() * 100000;
         coords.push_back(x);
         coords.push_back(y);
         if(valuePresent) {
@@ -67,6 +67,9 @@ QVector<NPArray> readPolygons(QString fileName, QVector<int> &polygonIDs) {
     int nr = line.toInt();
 
     for(int i = 0;i < nr;i ++) {
+        // name of the region. ignoring it for now
+        line = ip.readLine();
+
         // # polygons making up this regions
         line = ip.readLine();
         int np = line.toInt();
@@ -83,10 +86,11 @@ QVector<NPArray> readPolygons(QString fileName, QVector<int> &polygonIDs) {
             float prevx, prevy;
             for(int k = 0;k < psize;k ++) {
                 line = ip.readLine();
-                QStringList list = line.split(QRegExp("\\s"),QString::SkipEmptyParts);
-                float x = list[0].toFloat();
-                float y = list[1].toFloat();
+                QStringList list = line.split(",");
+                float x = list[0].toFloat() * 100000;
+                float y = list[1].toFloat() * 100000;
                 bool push = false;
+                // making sure there are no consecutive points that are duplicates
                 if(k == 0) {
                     push = true;
                 } else if(x != prevx || y != prevy) {
@@ -113,19 +117,11 @@ QVector<NPArray> readPolygons(QString fileName, QVector<int> &polygonIDs) {
 }
 
 void printResults(NPArray &arr, QVector<int> &polyIds, size_t size = 10) {
-    QSet<int> uids;
-    for(int i = 0;i < polyIds.size();i ++) {
-        uids << polyIds[i];
-    }
-    qDebug() << "no. of unique ids:" << uids;
-    QVector<float> res(uids.size(),0);
-    size_t n =std::min(size,arr.size);
-    float *val = (float *)arr.data;
+    int n =std::min((int)size,(int)arr.size);
+    float *vals = (float *)arr.data;
+    std::cout << "no. of rows: " << arr.size << std::endl;
     for(int i = 0;i < n;i ++) {
-        res[polyIds[i]] += val[i];
-    }
-    for(int i = 0;i < res.size();i ++) {
-        std::cout << i << "\t: " << res[i] << std::endl;
+        std::cout << i << "\t: " << vals[i] << std::endl;
     }
 }
 
@@ -134,18 +130,30 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     QVector<int> polyIds;
     QVector<NPArray> points = readPoints("../../data/points.csv", true);
-    QVector<NPArray> polys = readPolygons("../../data/polygons.txt", polyIds);
+    QVector<NPArray> polys = readPolygons("../../data/neighs.poly", polyIds);
 
     SpatialAggregation spagg(3000);
     qDebug() << "setting input";
-    spagg.setInput(points,polys);
+    spagg.setInput(points,polys,polyIds);
+
+    bool accurate = true;
+
+    NPArray count;
     qDebug() << "performing count aggregation";
-    NPArray count = spagg.rasterJoin(1000, Count);
+    if(accurate) {
+        count = spagg.accurateJoin(Count);
+    } else {
+        count = spagg.rasterJoin(20, Count);
+    }
     printResults(count,polyIds);
 
+    NPArray avg;
     qDebug() << "performing avg. aggregation";
-    NPArray avg = spagg.rasterJoin(1000, Avg);
+    if(accurate) {
+        avg = spagg.accurateJoin(Avg);
+    } else {
+        avg = spagg.rasterJoin(20, Avg);
+    }
     printResults(avg,polyIds);
-
     return 0;
 }

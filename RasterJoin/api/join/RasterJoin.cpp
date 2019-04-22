@@ -228,7 +228,7 @@ void RasterJoin::performJoin() {
                 this->renderPoints();
                 this->renderPolys();
 //                this->pointsFbo->toImage().save("../points.png");
-//                this->polyFbo->toImage().save("../points.png");
+//                this->polyFbo->toImage().save("../polys.png");
             }
         }
 

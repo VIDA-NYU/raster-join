@@ -7,9 +7,6 @@
 
 #if !__APPLE__
 #include <GL/gl.h>
-    #ifndef WIN32
-    #include <GL/glext.h>
-    #endif
 #else
 #include <gl.h>
 #include <glext.h>
