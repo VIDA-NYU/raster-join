@@ -1,5 +1,6 @@
 #include "SpatialAggregation.hpp"
-
+#include <db/DataHandler.hpp>
+#include <join/GLHandler.hpp>
 #include <iostream>
 
 SpatialAggregation::SpatialAggregation(int64_t gpuMemInMB) {
@@ -17,9 +18,9 @@ void SpatialAggregation::setInput(QVector<NPArray> pointColumns, QVector<NPArray
     this->dataHandler->setPolygonData(polygons, polyIds);
 }
 
-NPArray SpatialAggregation::rasterJoin(double accuracy, Aggregation aggType) {
-    if(aggType != Aggregation::Count) {
-        dataHandler->setAggregation(aggType, 1);
+NPArray SpatialAggregation::rasterJoin(double accuracy, AggFunction aggType) {
+    if(aggType != AggFunction::Count) {
+        dataHandler->setAggregation((Aggregation)aggType, 1);
     } else {
         dataHandler->setAggregation();
     }
@@ -28,9 +29,9 @@ NPArray SpatialAggregation::rasterJoin(double accuracy, Aggregation aggType) {
     return agg;
 }
 
-NPArray SpatialAggregation::accurateJoin(Aggregation aggType, int polyIndexResX, int polyIndexResY) {
-    if(aggType != Aggregation::Count) {
-        dataHandler->setAggregation(aggType, 1);
+NPArray SpatialAggregation::accurateJoin(AggFunction aggType, int polyIndexResX, int polyIndexResY) {
+    if(aggType != AggFunction::Count) {
+        dataHandler->setAggregation((Aggregation)aggType, 1);
     } else {
         dataHandler->setAggregation();
     }

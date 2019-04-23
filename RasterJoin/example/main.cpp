@@ -141,18 +141,18 @@ int main(int argc, char *argv[])
     NPArray count;
     qDebug() << "performing count aggregation";
     if(accurate) {
-        count = spagg.accurateJoin(Count);
+        count = spagg.accurateJoin(SpatialAggregation::Count);
     } else {
-        count = spagg.rasterJoin(20, Count);
+        count = spagg.rasterJoin(20, SpatialAggregation::Count);
     }
     printResults(count,polyIds);
 
     NPArray avg;
     qDebug() << "performing avg. aggregation";
     if(accurate) {
-        avg = spagg.accurateJoin(Avg);
+        avg = spagg.accurateJoin(SpatialAggregation::Avg);
     } else {
-        avg = spagg.rasterJoin(20, Avg);
+        avg = spagg.rasterJoin(20, SpatialAggregation::Avg);
     }
     printResults(avg,polyIds);
     return 0;
