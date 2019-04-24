@@ -39,9 +39,13 @@ fp.close()
 app = QtGui.QGuiApplication(sys.argv)
 sa = SpatialAggregation(3000)
 
-sa.setInput([pcoords,pvals],polys,polyIds)
-count = sa.rasterJoin(20,SpatialAggregation.Count)
-print(count)
+sa.setInputPoints([pcoords,pvals])
+sa.setInputPolygons(polys,polyIds)
 
-avg = sa.rasterJoin(20,SpatialAggregation.Avg)
+print("no. of passes: ", sa.setAccuracyDistance(20))
+# count = sa.rasterJoin(SpatialAggregation.Count)
+# count = sa.accurateJoin(SpatialAggregation.Count)
+# print(count)
+
+avg = sa.rasterJoin(SpatialAggregation.Avg)
 print(avg)

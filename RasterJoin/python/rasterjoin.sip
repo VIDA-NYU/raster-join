@@ -17,7 +17,12 @@ public:
 
     SpatialAggregation(qint64 gpuMemInMB);
 
-    void setInput(QVector<NPArray> pointColumns, QVector<NPArray> polygons, QVector<int> polyIds=QVector<int>());
-    NPArray rasterJoin(double accuracy, AggFunction aggType);
+    void setInputPoints(QVector<NPArray> pointColumns);
+    void setInputPolygons(QVector<NPArray> polygons, QVector<int> polyIds=QVector<int>());
+    
+    NPArray rasterJoin(AggFunction aggType);
     NPArray accurateJoin(AggFunction aggType, int polyIndexResX = 1024, int polyIndexResY = 1024);
+
+    int setAccuracyDistance(double accuracy);
+    double setAccuracyResolution(int maxResolution);
 };

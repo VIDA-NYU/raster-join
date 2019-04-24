@@ -75,7 +75,7 @@ public:
     int presx,presy;
     int inmem;
 
-    int accuracy;
+    double accuracy;
 };
 
 #endif // GLHANDLER_H

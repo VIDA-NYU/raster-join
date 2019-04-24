@@ -135,7 +135,8 @@ int main(int argc, char *argv[])
 
     SpatialAggregation spagg(3000);
     qDebug() << "setting input";
-    spagg.setInput(points,polys,polyIds);
+    spagg.setInputPoints(points);
+    spagg.setInputPolygons(polys,polyIds);
 
     bool accurate = true;
 
@@ -144,7 +145,8 @@ int main(int argc, char *argv[])
     if(accurate) {
         count = spagg.accurateJoin(SpatialAggregation::Count);
     } else {
-        count = spagg.rasterJoin(20, SpatialAggregation::Count);
+        spagg.setAccuracyDistance(20);
+        count = spagg.rasterJoin(SpatialAggregation::Count);
     }
     printResults(count,polyIds);
 
@@ -153,7 +155,8 @@ int main(int argc, char *argv[])
     if(accurate) {
         avg = spagg.accurateJoin(SpatialAggregation::Avg);
     } else {
-        avg = spagg.rasterJoin(20, SpatialAggregation::Avg);
+        spagg.setAccuracyDistance(20);
+        avg = spagg.rasterJoin(SpatialAggregation::Avg);
     }
     printResults(avg,polyIds);
     return 0;
