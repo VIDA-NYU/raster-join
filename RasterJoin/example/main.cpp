@@ -2,6 +2,7 @@
 #include <QString>
 #include <QFile>
 #include <QTextStream>
+#include <QDebug>
 
 #include <iostream>
 #include <interface/SpatialAggregation.hpp>
