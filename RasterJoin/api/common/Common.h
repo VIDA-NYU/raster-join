@@ -8,10 +8,16 @@
 
 #include <triangulation/clip2tri/clip2tri.h>
 
-#if defined(RASTERJOIN_LIB)
-    #define RASTERJOIN_PREFIX Q_DECL_EXPORT
-#else
-    #define RASTERJOIN_PREFIX Q_DECL_IMPORT
+#if defined(WIN32)
+    #if defined(STATIC_BUILD)
+        #define RASTERJOIN_PREFIX
+    #else
+        #if defined(RASTERJOIN_LIB)
+            #define RASTERJOIN_PREFIX Q_DECL_EXPORT
+        #else
+            #define RASTERJOIN_PREFIX Q_DECL_IMPORT
+        #endif
+    #endif
 #endif
 
 #define DISK_PAGE_SIZE 4096//16384 //4096

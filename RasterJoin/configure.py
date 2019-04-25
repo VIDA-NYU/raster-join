@@ -50,7 +50,7 @@ class TargetQtConfiguration(object):
 if __name__=="__main__":
     from argparse import ArgumentParser
 
-    parser=ArgumentParser(description="Configure PyMyLabel module.")
+    parser=ArgumentParser(description="Configure PyRasterJoin module.")
     parser.add_argument(
         '-q', '--qmake',
         dest="qmake",
@@ -128,8 +128,11 @@ if __name__=="__main__":
     if sys.platform=='win32':
         rasterBuildPath = os.path.join(os.path.abspath(build_dir),"api/")
         linkPath = os.path.join(os.path.abspath(rasterBuildPath),"release/")
-        makefile.extra_libs+=['Qt5Core']
+        makefile.extra_libs+=['Qt5Core','Qt5Gui','Qt5OpenGL']
         makefile.extra_defines+=['STATIC_BUILD']
+        vcpkg_dir = os.getenv('VCPKG_HOME')
+        makefile.extra_lib_dirs+=[os.path.join(vcpkg_dir,"installed/x64-windows-static/lib/")]
+        makefile.extra_libs += ["glew32","opengl32"]
     elif sys.platform=='linux':
         rasterBuildPath = os.path.join(os.path.abspath(build_dir),"api/")
         linkPath = rasterBuildPath
@@ -141,9 +144,10 @@ if __name__=="__main__":
         qtconfig.QT_INSTALL_HEADERS, 
         np.get_include(),
         os.path.join(qtconfig.QT_INSTALL_HEADERS, "QtCore"), 
-        os.path.join(qtconfig.QT_INSTALL_HEADERS, "QtGui")
+        os.path.join(qtconfig.QT_INSTALL_HEADERS, "QtGui"),
+        os.path.join(qtconfig.QT_INSTALL_HEADERS, "QtOpenGL")
         ]
-    makefile.extra_defines+=['QT_CORE_LIB', 'QT_GUI_LIB']
+    makefile.extra_defines+=['QT_CORE_LIB', 'QT_GUI_LIB', 'QT_OPENGL_LIB']
 
     makefile.extra_lib_dirs+=[qtconfig.QT_INSTALL_LIBS, linkPath]
     makefile.extra_libs += ["Rasterjoin"]

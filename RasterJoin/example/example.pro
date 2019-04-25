@@ -72,23 +72,25 @@ win32-g++{
 win32-msvc*{
     CONFIG += console
 
-    INCLUDEPATH += $$(VCPKG_HOME)/installed/x64-windows/include
+    INCLUDEPATH += $$(VCPKG_HOME)/installed/x64-windows-static/include
 
     #http://stackoverflow.com/questions/5134245/how-to-set-different-qmake-configuration-depending-on-debug-release
     CONFIG(debug, debug|release) {
         WINDOWS_BIN_PATH = debug/
-        LIBS += "-L$$(VCPKG_HOME)/installed/x64-windows/$${WINDOWS_BIN_PATH}/lib" -lglew32d
+        LIBS += "-L$$(VCPKG_HOME)/installed/x64-windows-static/$${WINDOWS_BIN_PATH}/lib" -lglew32d
         LIBS += "-L../api/debug/" -lRasterjoin
     } else {
         WINDOWS_BIN_PATH = ./
-        LIBS += "-L$$(VCPKG_HOME)/installed/x64-windows/$${WINDOWS_BIN_PATH}/lib" -lglew32
+        LIBS += "-L$$(VCPKG_HOME)/installed/x64-windows-static/$${WINDOWS_BIN_PATH}/lib" -lglew32
         LIBS += "-L../api/release/" -lRasterjoin
     }
 
     QMAKE_CXXFLAGS += -openmp
 
-    LIBS += "-L$$(VCPKG_HOME)/installed/x64-windows/$${WINDOWS_BIN_PATH}/bin"
     LIBS += "-ladvapi32"
     LIBS += -lopengl32 -lRpcRT4
+
+    DEFINES += STATIC_BUILD
+    CONFIG+=static
 }
 

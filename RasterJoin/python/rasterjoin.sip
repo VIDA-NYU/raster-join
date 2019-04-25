@@ -1,4 +1,4 @@
-%Module rasterjoin
+%Module pyrasterjoin
 %Import QtCore/QtCoremod.sip
 %Include nparray.sip
 

@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
     spagg.setInputPoints(points);
     spagg.setInputPolygons(polys,polyIds);
 
-    bool accurate = true;
+    bool accurate = false;
 
     NPArray count;
     qDebug() << "performing count aggregation";

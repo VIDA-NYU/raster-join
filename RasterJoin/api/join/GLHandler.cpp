@@ -156,6 +156,7 @@ void GLHandler::initializeGL() {
 }
 
 void GLHandler::initFunctions() {
+    Q_INIT_RESOURCE(shaders);
     // setup and initialize the different functions
     {
         PGLFunction function = PGLFunction(new RasterJoin(this));
